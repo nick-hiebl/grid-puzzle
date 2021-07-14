@@ -11,14 +11,17 @@ const HomePage = () => {
       <Typography variant="h3">Grid puzzles website</Typography>
       <p>Hopefully the home of some interesting puzzles.</p>
       {dayData.map(day => (
-        <Link key={day.link} to={day.link}>
-          <Card>
-            <CardContent>
-              <Typography variant="h5">{day.title}</Typography>
-              {day.description && (<p>{day.description}</p>)}
-            </CardContent>
-          </Card>
-        </Link>
+        <>
+          <Link key={day.link} to={day.link}>
+            <Card>
+              <CardContent>
+                <Typography variant="h5">{day.title}</Typography>
+                {day.description && (<p>{day.description}</p>)}
+              </CardContent>
+            </Card>
+          </Link>
+          <br />
+        </>
       ))}
     </Container>
   )
