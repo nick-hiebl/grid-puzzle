@@ -179,7 +179,7 @@ const Clue = (props: ClueProps) => {
     transform: horizontal ? 'rotate(90deg)' : undefined,
     width,
     height: width,
-    filter: 'grayscale(100%) brightness(100%)',
+    filter: 'grayscale(100%) brightness(0%)',
   };
 
   if (image && text) {
@@ -191,7 +191,6 @@ const Clue = (props: ClueProps) => {
         backgroundSize: 'cover',
         fontSize: '2em',
         fontWeight: 900,
-        WebkitTextStroke: '2px white',
       }}>
         {text}
       </div>

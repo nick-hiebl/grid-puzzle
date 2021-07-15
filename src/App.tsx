@@ -36,9 +36,26 @@ function App() {
         </Toolbar>
       </AppBar>
       <Switch>
-        {dayData.map((data, index) => (
-          <Route key={index} path={data.link}>
-            {data.component}
+        {dayData.map(({ component: Component, link, title }, index) => (
+          <Route key={index} path={link}>
+            <Component links={(
+              <div style={{ paddingTop: '8px', marginBottom: '32px' }}>
+                {index > 0 && (
+                  <div style={{ float: 'left' }}>
+                    <Link to={dayData[index - 1].link}>
+                    ← {dayData[index - 1].title}
+                    </Link>
+                  </div>
+                )}
+                {index < (dayData.length - 1) && (
+                  <div style={{ float: 'right' }}>
+                    <Link to={dayData[index + 1].link}>
+                      {dayData[index + 1].title} →
+                    </Link>
+                  </div>
+                )}
+              </div>
+            )} />
           </Route>
         ))}
         <Route path="/">

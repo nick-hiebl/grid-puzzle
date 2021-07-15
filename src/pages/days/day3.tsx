@@ -3,6 +3,8 @@ import React from 'react';
 import { Container, Typography } from '@material-ui/core';
 import { PuzzleWrapper } from '../../components/puzzle/PuzzleComponent';
 
+import type { DayProps } from './types';
+
 const PUZZLE_0 = { n: 3, colCounts: [0,-1,0], rowCounts: [-1,-1,-1], totalActive: 2, numContinents: 2 };
 const PUZZLE_0A = { n: 3, colCounts: [-1,-1,-1], rowCounts: [-1,-1,-1], totalActive: 4, numContinents: 3 };
 const PUZZLE_1 = { n: 3, colCounts: [2,1,2], rowCounts: [1,2,2], numContinents: 2 };
@@ -12,9 +14,10 @@ const PUZZLE_4 = { n: 4, colCounts: [3,2,-1,0], rowCounts: [3,1,2,-1], totalActi
 const PUZZLE_HARD_1 = { n: 5, colCounts: [-1,2,2,3,1], rowCounts: [3,2,1,-1,1], totalActive: 9, numContinents: 2 }; // 184867
 const PUZZLE_HARD_2 = { n: 5, colCounts: [-1,2,2,3,1], rowCounts: [3,2,1,-1,1], totalActive: 9, numContinents: 8 };
 
-const TodaysPage = () => {
+const TodaysPage = (props: DayProps) => {
   return (
     <Container>
+      {props.links}
       <Typography variant="h3">Day 3</Typography>
       <p>
         Let's continue adding more features!
@@ -65,6 +68,7 @@ const TodaysPage = () => {
       <p>Almost identical to the puzzle above.</p>
       <PuzzleWrapper details={PUZZLE_HARD_2} />
       <br />
+      {props.links}
     </Container>
   )
 };

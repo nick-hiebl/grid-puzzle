@@ -2,12 +2,7 @@ import Day1 from './day1';
 import Day2 from './day2';
 import Day3 from './day3';
 
-interface DayInfo {
-  title: string;
-  description?: string;
-  link: string;
-  component: React.ReactNode;
-}
+import type { DayInfo } from './types';
 
 export const dayData: DayInfo[] = [
   {
