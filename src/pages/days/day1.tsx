@@ -27,10 +27,10 @@ const TodaysPage = () => {
       <Typography variant="h4">Intro Puzzle</Typography>
       <PuzzleWrapper details={PUZZLE_0} />
       <p>
-        To signify an active square, click twice to draw a big dot in that
-        square. A single click will mark a square with grey strokes. This
-        counts as the square still being inactive, but can be used as a note
-        that the square is definitely not active during working out the puzzle.
+        To signify an active square, click to draw a big dot in that square. A
+        right click will mark a square with grey strokes. This counts as the
+        square still being inactive, but can be used as a note-to-self that the
+        square is definitely not active while working out the puzzle.
       </p>
       <p>
         I hope the solution to this one is straightforward enough. The

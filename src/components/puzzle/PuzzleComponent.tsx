@@ -34,6 +34,23 @@ const randomImage = (checked: boolean) => {
   return UNCHECKED_IMAGES[Math.floor(Math.random() * UNCHECKED_IMAGES.length)];
 }
 
+function isRightClick(event: React.MouseEvent) {
+  if ('type' in event) {
+    if (event.type === 'click') {
+      return false;
+    } else if (event.type === 'contextmenu') {
+      return true;
+    }
+  }
+  if ('which' in event) {
+    return event['which'] === 3;
+  } else if ('button' in event) {
+    return event['button'] === 2;
+  }
+
+  return false;
+}
+
 const Button = (props: ButtonProps) => {
   const { status, onToggle } = props;
   const [img, setImage] = useState(randomImage(status));
@@ -43,20 +60,34 @@ const Button = (props: ButtonProps) => {
     setImage(randomImage(status));
   }, [status]);
 
-  const onClick = useCallback(() => {
-    if (status) {
-      onToggle(false);
-      setEnabled(false);
-    } else if (enabled) {
-      onToggle(true);
+  const onClick = useCallback((event: React.MouseEvent) => {
+    if (isRightClick(event)) {
+      // Suppress context menu
+      event.preventDefault();
+      setImage(randomImage(false));
+      if (status || !enabled) {
+        onToggle(false);
+        setEnabled(true);
+      } else {
+        setEnabled(false);
+      }
     } else {
-      setEnabled(true);
+      if (status) {
+        setImage(randomImage(false));
+        onToggle(false);
+        setEnabled(false);
+      } else {
+        setImage(randomImage(true));
+        onToggle(true);
+        setEnabled(true);
+      }
     }
   }, [enabled, onToggle, status]);
 
   return (
     <button
       onClick={onClick}
+      onContextMenu={onClick}
       style={{
         border: '2px solid black',
         backgroundImage: enabled ? `url(${img})` : '',
@@ -102,13 +133,18 @@ const clueStyle: CSSProperties = {
   textAlign: 'center',
 };
 
+const coreImageStyle: CSSProperties = {
+  width: '45px',
+  filter: 'grayscale(100%)'
+};
+
 const Clue = (props: { horizontal?: boolean; count: number }) => {
   const { count, horizontal } = props;
 
   const style = horizontal ? {
     transform: 'rotate(90deg)',
-    width: '45px',
-  } : { width: '45px' };
+    ...coreImageStyle,
+  } : coreImageStyle;
 
   return (
     <div style={clueStyle}>

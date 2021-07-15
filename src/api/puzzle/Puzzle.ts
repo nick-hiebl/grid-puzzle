@@ -31,6 +31,12 @@ export default class Puzzle {
 
     this.colCounts = details.colCounts || Array(n).fill(-1);
     this.rowCounts = details.rowCounts || Array(n).fill(-1);
+    if (this.colCounts.some(v => v < -1 || v > n)) {
+      throw new Error('Invalid requirement forsome column ' + JSON.stringify(this.colCounts));
+    }
+    if (this.rowCounts.some(v => v < -1 || v > n)) {
+      throw new Error('Invalid requirement forsome column ' + JSON.stringify(this.rowCounts));
+    }
     // We must check for undefined, not just truthiness as it could be zero
     this.totalActive = details.totalActive !== undefined
       ? details.totalActive
