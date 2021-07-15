@@ -1,13 +1,12 @@
-export interface PuzzleState {
-  complete: boolean;
-  enabled: boolean[];
-}
+import countContinents from './countContinents';
+import type { PuzzleDetails, PuzzleState } from './types';
 
-export interface PuzzleDetails {
-  n: number;
-  colCounts?: number[];
-  rowCounts?: number[];
-  totalActive?: number;
+function readFallback(value: number | undefined, fallback = -1) {
+  if (value === undefined) {
+    return fallback;
+  }
+
+  return value;
 }
 
 export default class Puzzle {
@@ -18,6 +17,7 @@ export default class Puzzle {
   readonly colCounts: number[];
   readonly rowCounts: number[];
   readonly totalActive: number;
+  readonly numContinents: number;
 
   constructor(details: PuzzleDetails) {
     const n = details.n;
@@ -27,6 +27,7 @@ export default class Puzzle {
     this.state = {
       enabled: Array(n * n).fill(false),
       complete: false,
+      n,
     };
 
     this.colCounts = details.colCounts || Array(n).fill(-1);
@@ -37,10 +38,9 @@ export default class Puzzle {
     if (this.rowCounts.some(v => v < -1 || v > n)) {
       throw new Error('Invalid requirement forsome column ' + JSON.stringify(this.rowCounts));
     }
-    // We must check for undefined, not just truthiness as it could be zero
-    this.totalActive = details.totalActive !== undefined
-      ? details.totalActive
-      : -1;
+
+    this.totalActive = readFallback(details.totalActive);
+    this.numContinents = readFallback(details.numContinents);
   }
 
   isValid(state: PuzzleState): boolean {
@@ -78,6 +78,14 @@ export default class Puzzle {
       return false;
     }
 
+    if (this.numContinents !== -1) {
+      const continents = countContinents(state);
+
+      if (continents !== this.numContinents) {
+        return false;
+      }
+    }
+
     return true;
   }
 
@@ -96,6 +104,7 @@ export default class Puzzle {
     const newState = {
       enabled: this.state.enabled.slice(),
       complete: false,
+      n: this.n,
     };
     newState.enabled[index] = status;
     newState.complete = this.isValid(newState);

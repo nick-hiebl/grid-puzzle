@@ -1,5 +1,6 @@
 import Day1 from './day1';
 import Day2 from './day2';
+import Day3 from './day3';
 
 interface DayInfo {
   title: string;
@@ -20,5 +21,11 @@ export const dayData: DayInfo[] = [
     description: 'Adding a little variety/ambiguity',
     link: '/days/2',
     component: Day2,
-  }
+  },
+  {
+    title: 'Day 3: more ideas',
+    description: 'Something something',
+    link: '/days/3',
+    component: Day3,
+  },
 ];

@@ -31,6 +31,7 @@ function App() {
             Grid Puzzle
           </Typography>
           <NavItem to="/">Home</NavItem>
+          <NavItem to={dayData[0].link}>Day 1</NavItem>
           <NavItem to={dayData[dayData.length - 1].link}>Today</NavItem>
         </Toolbar>
       </AppBar>

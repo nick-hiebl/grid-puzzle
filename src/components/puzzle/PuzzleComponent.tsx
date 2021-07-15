@@ -1,6 +1,7 @@
 import React, { CSSProperties, useCallback, useState, useEffect } from 'react';
 
-import Puzzle, { PuzzleDetails, PuzzleState } from '../../api/puzzle/Puzzle';
+import Puzzle from '../../api/puzzle';
+import type { PuzzleDetails, PuzzleState } from '../../api/puzzle';
 
 interface ButtonProps {
   i: number;
@@ -9,17 +10,21 @@ interface ButtonProps {
   status: boolean;
 }
 
+function image(path: string) {
+  return `${process.env.PUBLIC_URL}/${path}`;
+}
+
 const CHECKED_IMAGES = [
   'checked-1.png',
   'checked-2.png',
   'checked-3.png',
-].map(s => `${process.env.PUBLIC_URL}/${s}`);
+].map(image);
 
 const UNCHECKED_IMAGES = [
   'unchecked-1.png',
   'unchecked-2.png',
   'unchecked-3.png',
-].map(s => `${process.env.PUBLIC_URL}/${s}`);
+].map(image);
 
 for (const image of CHECKED_IMAGES.concat(UNCHECKED_IMAGES)) {
   const preload = new Image();
@@ -122,8 +127,8 @@ const ButtonContainer = (props: ButtonContainerProps) => {
 const edgeStyle = (n: number): CSSProperties => ({
   display: 'inline-grid',
   gridTemplateRows: `45px ${n * 100 + 8}px`,
-  gridTemplateColumns: `${n * 100 + 8}px 45px`,
-  gridTemplateAreas: '"top-clues total-count" "main-section side-clues"',
+  gridTemplateColumns: `auto ${n * 100 + 8}px 45px`,
+  gridTemplateAreas: '"extra-details top-clues total-count" "extra-details main-section side-clues"',
 });
 
 const clueStyle: CSSProperties = {
@@ -133,32 +138,111 @@ const clueStyle: CSSProperties = {
   textAlign: 'center',
 };
 
-const coreImageStyle: CSSProperties = {
-  width: '45px',
-  filter: 'grayscale(100%)'
-};
-
-const Clue = (props: { horizontal?: boolean; count: number }) => {
+const EdgeClue = (props: { count: number; horizontal?: boolean }) => {
   const { count, horizontal } = props;
 
-  const style = horizontal ? {
-    transform: 'rotate(90deg)',
-    ...coreImageStyle,
-  } : coreImageStyle;
+  if (count > 6) {
+    return (
+      <Clue text={count.toString()} horizontal={horizontal} />
+    );
+  } else if (count >= 0) {
+    return (
+      <Clue
+        alt={`${count} in this ${horizontal ? 'row' : 'column'}`}
+        image={image(`counts/dot-${count}.png`)}
+        horizontal={horizontal}
+      />
+    );
+  }
+
+  return <div></div>;
+};
+
+interface ClueProps {
+  horizontal?: boolean;
+  image?: string;
+  alt?: string;
+  text?: string;
+  width?: string;
+}
+
+const Clue = (props: ClueProps) => {
+  const {
+    alt,
+    text,
+    image,
+    horizontal,
+    width = '45px',
+  } = props;
+
+  const coreStyle: CSSProperties = {
+    transform: horizontal ? 'rotate(90deg)' : undefined,
+    width,
+    height: width,
+    filter: 'grayscale(100%) brightness(100%)',
+  };
+
+  if (image && text) {
+    return (
+      <div style={{
+        ...coreStyle,
+        ...clueStyle,
+        backgroundImage: `url(${image})`,
+        backgroundSize: 'cover',
+        fontSize: '2em',
+        fontWeight: 900,
+        WebkitTextStroke: '2px white',
+      }}>
+        {text}
+      </div>
+    );
+  }
 
   return (
     <div style={clueStyle}>
-      {(count >= 0 && count < 7) && (
+      {image && (
         <img
-          alt={`${count} in this ${horizontal ? 'row' : 'column'}`}
-          style={style}
-          src={`${process.env.PUBLIC_URL}/counts/dot-${count}.png`}
+          alt={alt}
+          style={coreStyle}
+          src={image}
         />
       )}
-      {(count >= 7) && `${count}`}
+      {text && text}
     </div>
   );
-}
+};
+
+const columnStyles: CSSProperties = {
+  width: '100px',
+  height: '100%',
+  gridArea: 'extra-details',
+  display: 'flex',
+  alignItems: 'space-evenly',
+  justifyContent: 'center',
+};
+
+const DetailsColumn = (props: { puzzle: Puzzle }) => {
+  const { puzzle } = props;
+
+  const anyDetails = puzzle.numContinents !== -1;
+
+  if (!anyDetails) {
+    return null;
+  }
+
+  return (
+    <div style={columnStyles}>
+      {puzzle.numContinents !== -1 && (
+        <Clue
+          image={image('counts/continent.png')}
+          alt="Number of continents"
+          text={puzzle.numContinents.toString()}
+          width="60px"
+        />
+      )}
+    </div>
+  )
+};
 
 const EdgeWrapper = (props: { puzzle: Puzzle; children: React.ReactElement }) => {
   const { children, puzzle } = props;
@@ -172,6 +256,7 @@ const EdgeWrapper = (props: { puzzle: Puzzle; children: React.ReactElement }) =>
 
   return (
     <div style={edgeStyle(puzzle.n)}>
+      <DetailsColumn puzzle={puzzle} />
       <div style={{
         gridArea: 'top-clues',
         display: 'grid',
@@ -179,7 +264,7 @@ const EdgeWrapper = (props: { puzzle: Puzzle; children: React.ReactElement }) =>
         justifyContent: 'space-around',
       }}>
         {puzzle.colCounts.map((c, index) => (
-          <Clue key={index} count={c} />
+          <EdgeClue key={index} count={c} />
         ))}
       </div>
       <div style={{
@@ -194,7 +279,7 @@ const EdgeWrapper = (props: { puzzle: Puzzle; children: React.ReactElement }) =>
         alignContent: 'space-around',
       }}>
         {puzzle.rowCounts.map((c, index) => (
-          <Clue key={index} count={c} horizontal />
+          <EdgeClue key={index} count={c} horizontal />
         ))}
       </div>
       {puzzle.totalActive !== -1 && (
