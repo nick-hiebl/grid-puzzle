@@ -5,12 +5,12 @@ import { PuzzleWrapper } from '../../components/puzzle/PuzzleComponent';
 
 import type { DayProps } from './types';
 
-const PUZZLE_0 = { n: 3, colCounts: [0,1,0], rowCounts: [0,1,0] };
-const PUZZLE_1 = { n: 3, colCounts: [1,3,1], rowCounts: [2,2,1] };
-const PUZZLE_2 = { n: 4, colCounts: [2,4,1,1], rowCounts: [3,2,1,2] };
-const PUZZLE_3 = { n: 5, colCounts: [3,1,3,3,4], rowCounts: [5,2,4,0,3] };
-const PUZZLE_4 = { n: 5, colCounts: [1,1,2,4,4], rowCounts: [2,4,3,0,3] };
-const PUZZLE_HARD = { n: 6, colCounts: [1,2,4,1,0,1], rowCounts: [0,4,2,1,1,1] };
+const PUZZLE_0 = { n: 3, colClues: [0,1,0], rowClues: [0,1,0] };
+const PUZZLE_1 = { n: 3, colClues: [1,3,1], rowClues: [2,2,1] };
+const PUZZLE_2 = { n: 4, colClues: [2,4,1,1], rowClues: [3,2,1,2] };
+const PUZZLE_3 = { n: 5, colClues: [3,1,3,3,4], rowClues: [5,2,4,0,3] };
+const PUZZLE_4 = { n: 5, colClues: [1,1,2,4,4], rowClues: [2,4,3,0,3] };
+const PUZZLE_HARD = { n: 6, colClues: [1,2,4,1,0,1], rowClues: [0,4,2,1,1,1] };
 
 const TodaysPage = (props: DayProps) => {
   return (

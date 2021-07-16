@@ -8,6 +8,7 @@ import { dayData } from '../days';
 const HomePage = () => {
   return (
     <Container>
+      <br />
       <Typography variant="h3">Grid puzzles website</Typography>
       <p>Hopefully the home of some interesting puzzles.</p>
       {dayData.map(day => (

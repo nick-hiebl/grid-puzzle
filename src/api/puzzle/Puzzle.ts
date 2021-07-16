@@ -1,5 +1,6 @@
 import countContinents from './countContinents';
 import type { PuzzleDetails, PuzzleState } from './types';
+import { EdgeClue } from './types';
 
 function readFallback(value: number | undefined, fallback = -1) {
   if (value === undefined) {
@@ -9,6 +10,34 @@ function readFallback(value: number | undefined, fallback = -1) {
   return value;
 }
 
+function clueToCount(value: number | EdgeClue | null): number {
+  if (typeof(value) == 'number') {
+    return value;
+  }
+
+  return -1;
+}
+
+function clueToClue(value: number | EdgeClue | null): EdgeClue | null {
+  if (typeof(value) == 'number' || value == null) {
+    return null;
+  }
+
+  return value;
+}
+
+function hasTriples(seq: boolean[]) {
+  let count = 0;
+  for (const item of seq) {
+    if (item) count++;
+    else count = 0;
+
+    if (count === 3) return true;
+  }
+
+  return false;
+}
+
 export default class Puzzle {
   readonly n: number;
 
@@ -16,6 +45,8 @@ export default class Puzzle {
 
   readonly colCounts: number[];
   readonly rowCounts: number[];
+  readonly colRules: (EdgeClue | null)[];
+  readonly rowRules: (EdgeClue | null)[];
   readonly totalActive: number;
   readonly numContinents: number;
 
@@ -30,8 +61,12 @@ export default class Puzzle {
       n,
     };
 
-    this.colCounts = details.colCounts || Array(n).fill(-1);
-    this.rowCounts = details.rowCounts || Array(n).fill(-1);
+    this.colCounts = (details.colClues || Array(n).fill(null)).map(clueToCount);
+    this.rowCounts = (details.rowClues || Array(n).fill(null)).map(clueToCount);
+
+    this.colRules = (details.colClues || Array(n).fill(null)).map(clueToClue);
+    this.rowRules = (details.rowClues || Array(n).fill(null)).map(clueToClue);
+
     if (this.colCounts.some(v => v < -1 || v > n)) {
       throw new Error('Invalid requirement forsome column ' + JSON.stringify(this.colCounts));
     }
@@ -41,6 +76,20 @@ export default class Puzzle {
 
     this.totalActive = readFallback(details.totalActive);
     this.numContinents = readFallback(details.numContinents);
+  }
+
+  isLineValid(line: boolean[], rule: EdgeClue | null, count: number): boolean {
+    if (rule === EdgeClue.NO_TRIPLES) {
+      if (hasTriples(line)) {
+        return false;
+      }
+    }
+
+    if (count === -1) return true;
+
+    const sum = line.reduce((a, b) => a + (+b), 0);
+
+    return sum === count;
   }
 
   isValid(state: PuzzleState): boolean {
@@ -53,12 +102,9 @@ export default class Puzzle {
     }
 
     const colsValid = this.colCounts.every((count, index) => {
-      if (count === -1) return true;
+      const thisLine = state.enabled.filter((_, subIndex) => subIndex % this.n === index);
 
-      const inThisCol = state.enabled.filter((_, subIndex) => subIndex % this.n === index);
-      const sum = inThisCol.reduce((a, b) => a + +b, 0);
-
-      return sum === count;
+      return this.isLineValid(thisLine, this.colRules[index], count);
     });
 
     if (!colsValid) {
@@ -66,12 +112,9 @@ export default class Puzzle {
     }
 
     const rowsValid = this.rowCounts.every((count, index) => {
-      if (count === -1) return true;
+      const thisLine = state.enabled.slice(index * this.n, (index + 1) * this.n);
 
-      const inThisRow = state.enabled.slice(index * this.n, (index + 1) * this.n);
-      const sum = inThisRow.reduce((a, b) => a + (+b), 0);
-
-      return sum === count;
+      return this.isLineValid(thisLine, this.rowRules[index], count);
     });
 
     if (!rowsValid) {

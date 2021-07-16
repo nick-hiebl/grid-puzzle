@@ -4,10 +4,14 @@ export interface PuzzleState {
   enabled: boolean[];
 }
 
+export enum EdgeClue {
+  NO_TRIPLES = 'NO_TRIPLES',
+}
+
 export interface PuzzleDetails {
   n: number;
-  colCounts?: number[];
-  rowCounts?: number[];
+  colClues?: (number | EdgeClue | null)[];
+  rowClues?: (number | EdgeClue | null)[];
   totalActive?: number;
   numContinents?: number;
 }

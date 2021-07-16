@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import {
   HashRouter as Router,
   Switch,
   Route,
   Link,
+  withRouter,
 } from 'react-router-dom';
 
 import { AppBar, Toolbar, Typography } from '@material-ui/core';
@@ -12,9 +13,22 @@ import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import HomePage from './pages/homepage';
 import { dayData } from './pages/days';
 
+const ScrollToTop = withRouter(({ history }) => {
+  useEffect(() => {
+    const unlisten = history.listen(() => {
+      window.scrollTo(0, 0);
+    });
+    return () => {
+      unlisten();
+    }
+  }, [history]);
+
+  return null;
+});
+
 const NavItem = (props: { children: React.ReactChild, to: string }) => {
   return (
-    <Link to={props.to} style={{ textDecoration: 'none', color: 'white', marginLeft: '20px' }}>
+    <Link to={props.to} style={{ textDecoration: 'none', color: 'white', marginLeft: '32px' }}>
       <Typography variant="button">
         {props.children}
       </Typography>
@@ -25,7 +39,8 @@ const NavItem = (props: { children: React.ReactChild, to: string }) => {
 function App() {
   return (
     <Router>
-      <AppBar position="static">
+      <ScrollToTop />
+      <AppBar position="sticky">
         <Toolbar>
           <Typography variant="h5">
             Grid Puzzle

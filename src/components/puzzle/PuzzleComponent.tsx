@@ -2,6 +2,7 @@ import React, { CSSProperties, useCallback, useState, useEffect } from 'react';
 
 import Puzzle from '../../api/puzzle';
 import type { PuzzleDetails, PuzzleState } from '../../api/puzzle';
+import { EdgeClue } from '../../api/puzzle';
 
 interface ButtonProps {
   i: number;
@@ -138,14 +139,23 @@ const clueStyle: CSSProperties = {
   textAlign: 'center',
 };
 
-const EdgeClue = (props: { count: number; horizontal?: boolean }) => {
-  const { count, horizontal } = props;
+const RULE_DETAILS: Record<EdgeClue, { image: string; alt: string }> = {
+  [EdgeClue.NO_TRIPLES]: {
+    image: image('counts/circle-circle-cross.png'),
+    alt: 'Circle circle cross',
+  },
+};
+
+const EdgeClueComponent = (props: { count: number; rule?: EdgeClue | null; horizontal?: boolean }) => {
+  const { count, horizontal, rule } = props;
 
   if (count > 6) {
     return (
       <Clue text={count.toString()} horizontal={horizontal} />
     );
-  } else if (count >= 0) {
+  }
+
+  if (count >= 0) {
     return (
       <Clue
         alt={`${count} in this ${horizontal ? 'row' : 'column'}`}
@@ -153,6 +163,15 @@ const EdgeClue = (props: { count: number; horizontal?: boolean }) => {
         horizontal={horizontal}
       />
     );
+  }
+
+  if (rule) {
+    return (
+      <Clue
+        {...RULE_DETAILS[rule]}
+        horizontal={horizontal}
+      />
+    )
   }
 
   return <div></div>;
@@ -263,7 +282,11 @@ const EdgeWrapper = (props: { puzzle: Puzzle; children: React.ReactElement }) =>
         justifyContent: 'space-around',
       }}>
         {puzzle.colCounts.map((c, index) => (
-          <EdgeClue key={index} count={c} />
+          <EdgeClueComponent
+            key={index}
+            count={c}
+            rule={puzzle.colRules[index]}
+          />
         ))}
       </div>
       <div style={{
@@ -278,7 +301,12 @@ const EdgeWrapper = (props: { puzzle: Puzzle; children: React.ReactElement }) =>
         alignContent: 'space-around',
       }}>
         {puzzle.rowCounts.map((c, index) => (
-          <EdgeClue key={index} count={c} horizontal />
+          <EdgeClueComponent
+            key={index}
+            count={c}
+            rule={puzzle.rowRules[index]}
+            horizontal
+          />
         ))}
       </div>
       {puzzle.totalActive !== -1 && (
