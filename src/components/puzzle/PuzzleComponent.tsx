@@ -456,12 +456,18 @@ const EdgeWrapper = (props: { children: React.ReactElement }) => {
 };
 
 const ResetButton = () => {
-  const [, { reset }] = usePuzzleState();
+  const [state, { reset }] = usePuzzleState();
 
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    if (count === 3) {
+    if (state) {
+      setCount(0);
+    }
+  }, [state]);
+
+  useEffect(() => {
+    if (count === 2) {
       reset();
       setCount(0);
     }
@@ -471,7 +477,7 @@ const ResetButton = () => {
     <div style={{ float: 'right' }}>
       <button onClick={() => setCount(c => c + 1)}>
         {count === 0 && 'Reset'}
-        {count !== 0 && `Clicks until reset: ${3 - count}`}
+        {count !== 0 && 'Are you sure'}
       </button>
     </div>
   )
