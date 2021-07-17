@@ -1,17 +1,18 @@
 import React from 'react';
 
 import { Container, Typography } from '@material-ui/core';
-import { PuzzleWrapper } from '../../components/puzzle/PuzzleComponent';
+import { PlaygroundFeatures, PuzzleWrapper } from '../../components/puzzle/PuzzleComponent';
 
 import type { DayProps } from './types';
 
 const PUZZLE_0 = { n: 3, colClues: [0,null,0], rowClues: [null,null,null], totalActive: 2, numContinents: 2 };
-const PUZZLE_0A = { n: 3, colClues: [null,null,null], rowClues: [null,null,null], totalActive: 4, numContinents: 1 };
-const PUZZLE_0B = { n: 3, colClues: [null,null,null], rowClues: [null,null,null], totalActive: 4, numContinents: 2 };
-const PUZZLE_0C = { n: 3, colClues: [null,null,null], rowClues: [null,null,null], totalActive: 4, numContinents: 3 };
-const PUZZLE_0D = { n: 3, colClues: [null,null,null], rowClues: [null,null,null], totalActive: 4, numContinents: 4 };
-const PUZZLE_0E = { n: 2, colClues: [null,null], rowClues: [null,null], totalActive: 2, numContinents: 1 };
-const PUZZLE_0F = { n: 2, colClues: [null,null], rowClues: [null,null], totalActive: 2, numContinents: 2 };
+const PUZZLE_0A = { n: 2, colClues: [null,null], rowClues: [null,null], totalActive: 2, numContinents: 1 };
+const PUZZLE_0B = { n: 2, colClues: [null,null], rowClues: [null,null], totalActive: 2, numContinents: 2 };
+const PLAYGROUND = { n: 4 };
+const PUZZLE_0C = { n: 3, colClues: [null,null,null], rowClues: [null,null,null], totalActive: 4, numContinents: 1 };
+const PUZZLE_0D = { n: 3, colClues: [null,null,null], rowClues: [null,null,null], totalActive: 4, numContinents: 2 };
+const PUZZLE_0E = { n: 3, colClues: [null,null,null], rowClues: [null,null,null], totalActive: 4, numContinents: 3 };
+const PUZZLE_0F = { n: 3, colClues: [null,null,null], rowClues: [null,null,null], totalActive: 4, numContinents: 4 };
 const PUZZLE_1 = { n: 3, colClues: [2,1,2], rowClues: [1,2,2], numContinents: 2 };
 const PUZZLE_2 = { n: 3, colClues: [null,1,3], rowClues: [null,2,2], numContinents: 2 };
 const PUZZLE_3 = { n: 4, colClues: [2,4,2,null], rowClues: [2,4,null,null], totalActive: 10, numContinents: 2 };
@@ -42,41 +43,54 @@ const TodaysPage = (props: DayProps) => {
       <br />
 
       <Typography variant="h4">Intro Puzzle #2</Typography>
-      <p>
-        You can play around here to understand better what the rule is for
-        today.
-      </p>
       <PuzzleWrapper details={PUZZLE_0A} />
       <br />
 
       <Typography variant="h4">Intro Puzzle #3</Typography>
-      <p>
-        It's always worth finding some answers that are <i>wrong</i> as well as
-        correct ones. This helps you test your hypothesis.
-      </p>
+      <p>I just want to clarify this.</p>
       <PuzzleWrapper details={PUZZLE_0B} />
+      <br />
+
+      <Typography variant="h4">Playground</Typography>
+      <p>
+        <strong>Note:</strong> This is a playground, not a regular puzzle.
+        There is no "solution", but the puzzle will provide you with feedback
+        on the current puzzle state.
+      </p>
+      <PuzzleWrapper
+        details={PLAYGROUND}
+        playgroundFeatures={[PlaygroundFeatures.CONTINENTS]}
+        isPlayground
+      />
       <br />
 
       <Typography variant="h4">Intro Puzzle #4</Typography>
       <p>
-        Follow the pattern.
+        You can play around here to understand better what the rule is for
+        today.
       </p>
       <PuzzleWrapper details={PUZZLE_0C} />
       <br />
 
       <Typography variant="h4">Intro Puzzle #5</Typography>
       <p>
-        Hopefully this one should be understandable at this point.
+        It's always worth finding some answers that are <i>wrong</i> as well as
+        correct ones. This helps you test your hypothesis.
       </p>
       <PuzzleWrapper details={PUZZLE_0D} />
       <br />
 
       <Typography variant="h4">Intro Puzzle #6</Typography>
+      <p>
+        Follow the pattern.
+      </p>
       <PuzzleWrapper details={PUZZLE_0E} />
       <br />
 
       <Typography variant="h4">Intro Puzzle #7</Typography>
-      <p>I just want to clarify this.</p>
+      <p>
+        Hopefully this one should be understandable at this point.
+      </p>
       <PuzzleWrapper details={PUZZLE_0F} />
       <br />
 
@@ -109,6 +123,7 @@ const TodaysPage = (props: DayProps) => {
       <p>Almost identical to the puzzle above.</p>
       <PuzzleWrapper details={PUZZLE_HARD_2} />
       <br />
+
       {props.links}
     </Container>
   )

@@ -92,6 +92,10 @@ export default class Puzzle {
     return sum === count;
   }
 
+  static countContinents(state: PuzzleState) {
+    return countContinents(state);
+  }
+
   isValid(state: PuzzleState): boolean {
     if (this.totalActive >= 0) {
       const numActive = state.enabled.reduce((a, b) => a + +b, 0);

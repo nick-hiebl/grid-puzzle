@@ -6,7 +6,17 @@ import { EdgeClue } from '../../api/puzzle';
 
 const defaultPuzzle = new Puzzle({ n: 1 });
 
-const PuzzleContext = React.createContext<[Puzzle]>([defaultPuzzle]);
+export enum PlaygroundFeatures {
+  CONTINENTS,
+}
+
+interface PuzzleInfo {
+  puzzle: Puzzle;
+  isPlayground?: boolean;
+  playgroundFeatures?: PlaygroundFeatures[];
+}
+
+const PuzzleContext = React.createContext<PuzzleInfo>({ puzzle: defaultPuzzle });
 
 type PuzzleStateUpdater = (i: number, j: number, status: boolean) => void;
 
@@ -14,7 +24,15 @@ const PuzzleStateContext = React.createContext<
   [PuzzleState, PuzzleStateUpdater]
 >([defaultPuzzle.getState(), () => {}]);
 
-const usePuzzle = () => useContext(PuzzleContext);
+const usePuzzle = () => {
+  const x = useContext(PuzzleContext);
+
+  useEffect(() => {
+    console.warn('Re-rendering puzzle state');
+  }, [x]);
+
+  return x;
+}
 const usePuzzleState = () => useContext(PuzzleStateContext);
 
 interface ButtonProps {
@@ -74,6 +92,8 @@ const Button = (props: ButtonProps) => {
   const [img, setImage] = useState(randomImage(status));
   const [enabled, setEnabled] = useState(false);
 
+  const { isPlayground } = usePuzzle();
+
   const [, onToggle] = usePuzzleState();
 
   useEffect(() => {
@@ -109,7 +129,7 @@ const Button = (props: ButtonProps) => {
       onClick={onClick}
       onContextMenu={onClick}
       style={{
-        border: '2px solid black',
+        border: `2px solid ${isPlayground ? '#147eff' : 'black'}`,
         backgroundImage: enabled ? `url(${img})` : '',
         backgroundColor: 'white',
         backgroundSize: 'cover',
@@ -119,21 +139,21 @@ const Button = (props: ButtonProps) => {
   );
 };
 
-const containerStyle = (n: number): CSSProperties => ({
+const containerStyle = (n: number, isPlayground?: boolean): CSSProperties => ({
   display: 'inline-grid',
   gridTemplateColumns: '100px '.repeat(n),
   gridTemplateRows: '100px '.repeat(n),
-  border: '4px solid black',
+  border: `4px solid ${isPlayground ? '#147eff' : 'black'}`,
 });
 
 interface ButtonContainerProps {
-  n: number;
   children: React.ReactElement[];
 }
 
 const ButtonContainer = (props: ButtonContainerProps) => {
+  const { puzzle, isPlayground } = usePuzzle();
   return (
-    <div style={containerStyle(props.n)}>
+    <div style={containerStyle(puzzle.n, isPlayground)}>
       {props.children}
     </div>
   );
@@ -197,6 +217,8 @@ interface ClueProps {
   alt?: string;
   text?: string;
   width?: string;
+  color?: string;
+  filter?: string;
 }
 
 const Clue = (props: ClueProps) => {
@@ -206,13 +228,16 @@ const Clue = (props: ClueProps) => {
     image,
     horizontal,
     width = '45px',
+    filter = 'grayscale(100%) brightness(0%)',
+    color = 'black',
   } = props;
 
   const coreStyle: CSSProperties = {
     transform: horizontal ? 'rotate(90deg)' : undefined,
     width,
     height: width,
-    filter: 'grayscale(100%) brightness(0%)',
+    filter,
+    color,
   };
 
   if (image && text) {
@@ -253,10 +278,28 @@ const columnStyles: CSSProperties = {
   justifyContent: 'center',
 };
 
-const DetailsColumn = (props: { puzzle: Puzzle }) => {
-  const { puzzle } = props;
+const DetailsColumn = () => {
+  const { puzzle, isPlayground, playgroundFeatures } = usePuzzle();
+  const [state] = usePuzzleState();
 
   const anyDetails = puzzle.numContinents !== -1;
+
+  if (isPlayground && playgroundFeatures?.length) {
+    return (
+      <div style={columnStyles}>
+        {playgroundFeatures.includes(PlaygroundFeatures.CONTINENTS) && (
+          <Clue
+            image={image('counts/continent.png')}
+            alt="Number of continents"
+            text={Puzzle.countContinents(state).toString()}
+            width="60px"
+            color="#007e00"
+            filter="brightness(0) saturate(100%) invert(41%) sepia(48%) saturate(4528%) hue-rotate(200deg) brightness(99%) contrast(105%)"
+          />
+        )}
+      </div>
+    );
+  }
 
   if (!anyDetails) {
     return null;
@@ -279,18 +322,18 @@ const DetailsColumn = (props: { puzzle: Puzzle }) => {
 const EdgeWrapper = (props: { children: React.ReactElement }) => {
   const { children } = props;
 
-  const [puzzle] = usePuzzle();
+  const { puzzle, playgroundFeatures } = usePuzzle();
 
   const anyEdgeClues = puzzle.colCounts.some(v => v >= 0)
     || puzzle.rowCounts.some(v => v >= 0);
   
-  if (!anyEdgeClues && puzzle.totalActive === -1) {
+  if (!anyEdgeClues && puzzle.totalActive === -1 && !playgroundFeatures?.length) {
     return children;
   }
 
   return (
     <div style={edgeStyle(puzzle.n)}>
-      <DetailsColumn puzzle={puzzle} />
+      <DetailsColumn />
       <div style={{
         gridArea: 'top-clues',
         display: 'grid',
@@ -345,7 +388,7 @@ export const PuzzleComponent = () => {
 
   return (
     <EdgeWrapper>
-      <ButtonContainer n={state.n}>
+      <ButtonContainer>
         {state.enabled.map((status, index) => (
           <Button
             key={index}
@@ -361,12 +404,20 @@ export const PuzzleComponent = () => {
 
 interface Props {
   details: PuzzleDetails;
+  isPlayground?: boolean;
+  playgroundFeatures?: PlaygroundFeatures[];
 }
 
 export const PuzzleWrapper = (props: Props) => {
-  const { details } = props;
+  const { details, isPlayground, playgroundFeatures } = props;
 
-  const [puzzle] = useState(new Puzzle(details));
+  const [puzzleContext] = useState<PuzzleInfo>({
+    puzzle: new Puzzle(details),
+    isPlayground,
+    playgroundFeatures,
+  });
+
+  const { puzzle } = puzzleContext;
 
   const [state, setState] = useState<PuzzleState>(puzzle.getState());
 
@@ -375,10 +426,10 @@ export const PuzzleWrapper = (props: Props) => {
   }, [puzzle]);
 
   return (
-    <PuzzleContext.Provider value={[puzzle]}>
+    <PuzzleContext.Provider value={puzzleContext}>
       <PuzzleStateContext.Provider value={[state, onToggle]}>
         <div style={{
-          backgroundColor: state.complete ? 'hsla(120, 80%, 80%, 50%)' : '',
+          backgroundColor: (state.complete && !isPlayground) ? 'hsla(120, 80%, 80%, 50%)' : '',
           padding: '8px',
         }}>
           <PuzzleComponent />
