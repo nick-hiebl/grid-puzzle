@@ -92,6 +92,18 @@ export default class Puzzle {
     return sum === count;
   }
 
+  isRowValid(state: PuzzleState, index: number) {
+    const line = state.enabled.slice(index * this.n, (index + 1) * this.n);
+
+    return this.isLineValid(line, this.rowRules[index], this.rowCounts[index]);
+  }
+
+  isColValid(state: PuzzleState, index: number) {
+    const line = state.enabled.filter((_, subIndex) => subIndex % this.n === index);
+
+    return this.isLineValid(line, this.colRules[index], this.colCounts[index]);
+  }
+
   static countContinents(state: PuzzleState) {
     return countContinents(state);
   }

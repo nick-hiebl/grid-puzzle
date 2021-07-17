@@ -56,7 +56,7 @@ const TodaysPage = (props: DayProps) => {
       <Typography variant="h3">Day 4</Typography>
 
       <Typography variant="h4">Intro Puzzle #1</Typography>
-      <PuzzleWrapper details={PUZZLE_0} />
+      <PuzzleWrapper details={PUZZLE_0} highlightErrors />
       <p>
         Make sure to get this one wrong too, don't move on straight away.
       </p>
@@ -66,24 +66,24 @@ const TodaysPage = (props: DayProps) => {
         You can play around here to understand better what the rule is for
         today.
       </p>
-      <PuzzleWrapper details={PUZZLE_0A} />
+      <PuzzleWrapper details={PUZZLE_0A} highlightErrors />
       <br />
 
       <Typography variant="h4">Puzzle #1</Typography>
       <p>Let's do some puzzles now.</p>
-      <PuzzleWrapper details={PUZZLE_1} />
+      <PuzzleWrapper details={PUZZLE_1} highlightErrors />
       <br />
 
       <Typography variant="h4">Puzzle #2</Typography>
-      <PuzzleWrapper details={PUZZLE_2} />
+      <PuzzleWrapper details={PUZZLE_2} highlightErrors />
       <br /> 
 
       <Typography variant="h4">Puzzle #3</Typography>
-      <PuzzleWrapper details={PUZZLE_3} />
+      <PuzzleWrapper details={PUZZLE_3} highlightErrors />
       <br /> 
 
       <Typography variant="h4">Puzzle #4</Typography>
-      <PuzzleWrapper details={PUZZLE_4} />
+      <PuzzleWrapper details={PUZZLE_4} highlightErrors />
       <br />
 
       <Typography variant="h4">Final puzzle</Typography>

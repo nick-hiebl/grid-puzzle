@@ -39,16 +39,16 @@ const TodaysPage = (props: DayProps) => {
       </p>
 
       <Typography variant="h4">Intro Puzzle #1</Typography>
-      <PuzzleWrapper details={PUZZLE_0} />
+      <PuzzleWrapper details={PUZZLE_0} highlightErrors />
       <br />
 
       <Typography variant="h4">Intro Puzzle #2</Typography>
-      <PuzzleWrapper details={PUZZLE_0A} />
+      <PuzzleWrapper details={PUZZLE_0A} highlightErrors />
       <br />
 
       <Typography variant="h4">Intro Puzzle #3</Typography>
       <p>I just want to clarify this.</p>
-      <PuzzleWrapper details={PUZZLE_0B} />
+      <PuzzleWrapper details={PUZZLE_0B} highlightErrors />
       <br />
 
       <Typography variant="h4">Playground</Typography>
@@ -69,7 +69,7 @@ const TodaysPage = (props: DayProps) => {
         You can play around here to understand better what the rule is for
         today.
       </p>
-      <PuzzleWrapper details={PUZZLE_0C} />
+      <PuzzleWrapper details={PUZZLE_0C} highlightErrors />
       <br />
 
       <Typography variant="h4">Intro Puzzle #5</Typography>
@@ -77,21 +77,21 @@ const TodaysPage = (props: DayProps) => {
         It's always worth finding some answers that are <i>wrong</i> as well as
         correct ones. This helps you test your hypothesis.
       </p>
-      <PuzzleWrapper details={PUZZLE_0D} />
+      <PuzzleWrapper details={PUZZLE_0D} highlightErrors />
       <br />
 
       <Typography variant="h4">Intro Puzzle #6</Typography>
       <p>
         Follow the pattern.
       </p>
-      <PuzzleWrapper details={PUZZLE_0E} />
+      <PuzzleWrapper details={PUZZLE_0E} highlightErrors />
       <br />
 
       <Typography variant="h4">Intro Puzzle #7</Typography>
       <p>
         Hopefully this one should be understandable at this point.
       </p>
-      <PuzzleWrapper details={PUZZLE_0F} />
+      <PuzzleWrapper details={PUZZLE_0F} highlightErrors />
       <br />
 
       <Typography variant="h4">Puzzle #1</Typography>

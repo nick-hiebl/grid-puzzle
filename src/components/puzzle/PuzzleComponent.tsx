@@ -4,6 +4,9 @@ import Puzzle from '../../api/puzzle';
 import type { PuzzleDetails, PuzzleState } from '../../api/puzzle';
 import { EdgeClue } from '../../api/puzzle';
 
+const GREEN_TO_BLUE = 'brightness(0) saturate(100%) invert(41%) sepia(48%) saturate(4528%) hue-rotate(200deg) brightness(99%) contrast(105%)';
+const GREEN_TO_RED = 'brightness(0) saturate(100%) invert(11%) sepia(98%) saturate(7155%) hue-rotate(0deg) brightness(101%) contrast(109%)';
+
 const defaultPuzzle = new Puzzle({ n: 1 });
 
 export enum PlaygroundFeatures {
@@ -14,6 +17,7 @@ interface PuzzleInfo {
   puzzle: Puzzle;
   isPlayground?: boolean;
   playgroundFeatures?: PlaygroundFeatures[];
+  highlightErrors?: boolean;
 }
 
 const PuzzleContext = React.createContext<PuzzleInfo>({ puzzle: defaultPuzzle });
@@ -180,12 +184,31 @@ const RULE_DETAILS: Record<EdgeClue, { image: string; alt: string }> = {
   },
 };
 
-const EdgeClueComponent = (props: { count: number; rule?: EdgeClue | null; horizontal?: boolean }) => {
-  const { count, horizontal, rule } = props;
+const useEdgeClueHighlight = (horizontal: boolean, index: number): boolean => {
+  const { puzzle, highlightErrors } = usePuzzle();
+  const [state] = usePuzzleState();
+
+  if (!highlightErrors) {
+    return false;
+  }
+
+  if (horizontal) {
+    return !puzzle.isRowValid(state, index);
+  } else {
+    return !puzzle.isColValid(state, index);
+  }
+};
+
+const EdgeClueComponent = (props: { count: number; rule?: EdgeClue | null; horizontal?: boolean; index: number }) => {
+  const { count, horizontal, index, rule } = props;
+
+  const shouldHighlight = useEdgeClueHighlight(!!horizontal, index);
+
+  const filter = shouldHighlight ? GREEN_TO_RED : undefined;
 
   if (count > 6) {
     return (
-      <Clue text={count.toString()} horizontal={horizontal} />
+      <Clue text={count.toString()} horizontal={horizontal} filter={filter} />
     );
   }
 
@@ -195,6 +218,7 @@ const EdgeClueComponent = (props: { count: number; rule?: EdgeClue | null; horiz
         alt={`${count} in this ${horizontal ? 'row' : 'column'}`}
         image={image(`counts/dot-${count}.png`)}
         horizontal={horizontal}
+        filter={filter}
       />
     );
   }
@@ -204,6 +228,7 @@ const EdgeClueComponent = (props: { count: number; rule?: EdgeClue | null; horiz
       <Clue
         {...RULE_DETAILS[rule]}
         horizontal={horizontal}
+        filter={filter}
       />
     )
   }
@@ -279,7 +304,7 @@ const columnStyles: CSSProperties = {
 };
 
 const DetailsColumn = () => {
-  const { puzzle, isPlayground, playgroundFeatures } = usePuzzle();
+  const { puzzle, isPlayground, playgroundFeatures, highlightErrors } = usePuzzle();
   const [state] = usePuzzleState();
 
   const anyDetails = puzzle.numContinents !== -1;
@@ -294,7 +319,7 @@ const DetailsColumn = () => {
             text={Puzzle.countContinents(state).toString()}
             width="60px"
             color="#007e00"
-            filter="brightness(0) saturate(100%) invert(41%) sepia(48%) saturate(4528%) hue-rotate(200deg) brightness(99%) contrast(105%)"
+            filter={GREEN_TO_BLUE}
           />
         )}
       </div>
@@ -305,6 +330,10 @@ const DetailsColumn = () => {
     return null;
   }
 
+  const shouldHighlight = highlightErrors
+    && puzzle.numContinents !== -1 // Continent count matters
+    && Puzzle.countContinents(state) !== puzzle.numContinents; // Continent count is wrong
+
   return (
     <div style={columnStyles}>
       {puzzle.numContinents !== -1 && (
@@ -313,11 +342,37 @@ const DetailsColumn = () => {
           alt="Number of continents"
           text={puzzle.numContinents.toString()}
           width="60px"
+          filter={shouldHighlight ? GREEN_TO_RED : undefined}
         />
       )}
     </div>
   )
 };
+
+const ActiveCount = () => {
+  const { puzzle, highlightErrors } = usePuzzle();
+  const [state] = usePuzzleState();
+
+  if (puzzle.totalActive === -1) {
+    return null;
+  }
+
+  const shouldHighlight = highlightErrors
+    && puzzle.totalActive !== -1
+    && state.enabled.reduce((a, b) => a + (+b), 0) !== puzzle.totalActive;
+
+  return (
+    <div style={{
+      gridArea: 'total-count',
+      textAlign: 'center',
+      justifyContent: 'center',
+    }}>
+      <strong style={{ fontSize: '2em', color: shouldHighlight ? 'red' : 'inherit' }}>
+        {puzzle.totalActive}
+      </strong>
+    </div>
+  );
+}
 
 const EdgeWrapper = (props: { children: React.ReactElement }) => {
   const { children } = props;
@@ -343,6 +398,7 @@ const EdgeWrapper = (props: { children: React.ReactElement }) => {
         {puzzle.colCounts.map((c, index) => (
           <EdgeClueComponent
             key={index}
+            index={index}
             count={c}
             rule={puzzle.colRules[index]}
           />
@@ -362,23 +418,14 @@ const EdgeWrapper = (props: { children: React.ReactElement }) => {
         {puzzle.rowCounts.map((c, index) => (
           <EdgeClueComponent
             key={index}
+            index={index}
             count={c}
             rule={puzzle.rowRules[index]}
             horizontal
           />
         ))}
       </div>
-      {puzzle.totalActive !== -1 && (
-        <div style={{
-          gridArea: 'total-count',
-          textAlign: 'center',
-          justifyContent: 'center',
-        }}>
-          <strong style={{ fontSize: '2em' }}>
-            {puzzle.totalActive}
-          </strong>
-        </div>
-      )}
+      <ActiveCount />
     </div>
   );
 };
@@ -406,15 +453,17 @@ interface Props {
   details: PuzzleDetails;
   isPlayground?: boolean;
   playgroundFeatures?: PlaygroundFeatures[];
+  highlightErrors?: boolean;
 }
 
 export const PuzzleWrapper = (props: Props) => {
-  const { details, isPlayground, playgroundFeatures } = props;
+  const { details, highlightErrors, isPlayground, playgroundFeatures } = props;
 
   const [puzzleContext] = useState<PuzzleInfo>({
     puzzle: new Puzzle(details),
     isPlayground,
     playgroundFeatures,
+    highlightErrors,
   });
 
   const { puzzle } = puzzleContext;

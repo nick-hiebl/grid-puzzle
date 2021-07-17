@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
 import { Card, CardContent, Container, Typography } from '@material-ui/core';
 import { Link } from 'react-router-dom';
@@ -12,8 +12,8 @@ const HomePage = () => {
       <Typography variant="h3">Grid puzzles website</Typography>
       <p>Hopefully the home of some interesting puzzles.</p>
       {dayData.map(day => (
-        <>
-          <Link key={day.link} to={day.link}>
+        <Fragment key={day.link}>
+          <Link to={day.link}>
             <Card>
               <CardContent>
                 <Typography variant="h5">{day.title}</Typography>
@@ -22,7 +22,7 @@ const HomePage = () => {
             </Card>
           </Link>
           <br />
-        </>
+        </Fragment>
       ))}
     </Container>
   )
