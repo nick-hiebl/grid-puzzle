@@ -90,6 +90,10 @@ export default class Puzzle {
       if (hasTriples(line)) {
         return false;
       }
+    } else if (rule === EdgeClue.YES_TRIPLES) {
+      if (!hasTriples(line)) {
+        return false;
+      }
     }
 
     if (count === -1) return true;
@@ -182,6 +186,19 @@ export default class Puzzle {
       n: this.n,
     };
     newState.enabled[index] = status;
+    newState.complete = this.isValid(newState);
+
+    this.state = newState;
+
+    return this.state;
+  }
+
+  reset(): PuzzleState {
+    const newState = {
+      enabled: Array(this.n * this.n).fill(false),
+      complete: false,
+      n: this.n,
+    };
     newState.complete = this.isValid(newState);
 
     this.state = newState;

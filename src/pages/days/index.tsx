@@ -3,6 +3,7 @@ import Day2 from './day2';
 import Day3 from './day3';
 import Day4 from './day4';
 import Day5 from './day5';
+import Day6 from './day6';
 
 import type { DayInfo } from './types';
 
@@ -36,6 +37,12 @@ export const dayData: DayInfo[] = [
     description: 'Does this help or hinder?',
     link: '/days/5',
     component: Day5,
-    hidden: true,
   },
+  {
+    title: 'Day 6: Not what we saw before',
+    description: 'This looks a little familiar',
+    link: '/days/6',
+    component: Day6,
+    hidden: true,
+  }
 ];

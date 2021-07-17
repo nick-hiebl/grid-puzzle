@@ -18,7 +18,7 @@ const TodaysPage = (props: DayProps) => {
   return (
     <Container>
       {props.links}
-      <Typography variant="h3">Day 2</Typography>
+      <Typography variant="h3">Day 2: Some variation</Typography>
       <p>
         Let's add a little variety to the very simple concept introduced
         yesterday.

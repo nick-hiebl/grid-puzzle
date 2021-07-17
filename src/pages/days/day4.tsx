@@ -53,7 +53,7 @@ const TodaysPage = (props: DayProps) => {
   return (
     <Container>
       {props.links}
-      <Typography variant="h3">Day 4</Typography>
+      <Typography variant="h3">Day 4: Circle circle cross</Typography>
 
       <Typography variant="h4">Intro Puzzle #1</Typography>
       <PuzzleWrapper details={PUZZLE_0} highlightErrors />

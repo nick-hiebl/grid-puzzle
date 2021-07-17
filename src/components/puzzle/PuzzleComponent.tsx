@@ -1,4 +1,11 @@
-import React, { CSSProperties, useCallback, useContext, useEffect, useState } from 'react';
+import React, {
+  CSSProperties,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 
 import Puzzle from '../../api/puzzle';
 import type { PuzzleDetails, PuzzleState } from '../../api/puzzle';
@@ -18,15 +25,24 @@ interface PuzzleInfo {
   isPlayground?: boolean;
   playgroundFeatures?: PlaygroundFeatures[];
   highlightErrors?: boolean;
+  attemptKey: string;
 }
 
-const PuzzleContext = React.createContext<PuzzleInfo>({ puzzle: defaultPuzzle });
+const PuzzleContext = React.createContext<PuzzleInfo>({
+  puzzle: defaultPuzzle,
+  attemptKey: '',
+});
 
 type PuzzleStateUpdater = (i: number, j: number, status: boolean) => void;
 
+interface PuzzleStateActions {
+  onToggle: PuzzleStateUpdater;
+  reset: () => void;
+}
+
 const PuzzleStateContext = React.createContext<
-  [PuzzleState, PuzzleStateUpdater]
->([defaultPuzzle.getState(), () => {}]);
+  [PuzzleState, PuzzleStateActions]
+>([defaultPuzzle.getState(), { onToggle: () => {}, reset: () => {} }]);
 
 const usePuzzle = () => {
   const x = useContext(PuzzleContext);
@@ -96,13 +112,15 @@ const Button = (props: ButtonProps) => {
   const [img, setImage] = useState(randomImage(status));
   const [enabled, setEnabled] = useState(false);
 
-  const { isPlayground } = usePuzzle();
+  const { attemptKey, isPlayground } = usePuzzle();
 
-  const [, onToggle] = usePuzzleState();
+  const [, { onToggle }] = usePuzzleState();
 
   useEffect(() => {
-    setImage(randomImage(status));
-  }, [status]);
+    if (attemptKey) {
+      setEnabled(false);
+    }
+  }, [attemptKey, setEnabled]);
 
   const onClick = useCallback((event: React.MouseEvent) => {
     if (isRightClick(event)) {
@@ -181,6 +199,10 @@ const RULE_DETAILS: Record<EdgeClue, { image: string; alt: string }> = {
   [EdgeClue.NO_TRIPLES]: {
     image: image('counts/circle-circle-cross.png'),
     alt: 'Circle circle cross',
+  },
+  [EdgeClue.YES_TRIPLES]: {
+    image: image('counts/cross-ccc.png'),
+    alt: 'NOT circle circle cross',
   },
 };
 
@@ -331,8 +353,10 @@ const DetailsColumn = () => {
   }
 
   const shouldHighlight = highlightErrors
-    && puzzle.numContinents !== -1 // Continent count matters
-    && Puzzle.countContinents(state) !== puzzle.numContinents; // Continent count is wrong
+    // Continent count matters
+    && puzzle.numContinents !== -1
+    // Continent count is wrong
+    && Puzzle.countContinents(state) !== puzzle.numContinents;
 
   return (
     <div style={columnStyles}>
@@ -431,22 +455,47 @@ const EdgeWrapper = (props: { children: React.ReactElement }) => {
   );
 };
 
-export const PuzzleComponent = () => {
+const ResetButton = () => {
+  const [, { reset }] = usePuzzleState();
+
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (count === 3) {
+      reset();
+      setCount(0);
+    }
+  }, [count, reset]);
+
+  return (
+    <div style={{ float: 'right' }}>
+      <button onClick={() => setCount(c => c + 1)}>
+        {count === 0 && 'Reset'}
+        {count !== 0 && `Clicks until reset: ${3 - count}`}
+      </button>
+    </div>
+  )
+};
+
+const PuzzleComponent = () => {
   const [state] = usePuzzleState();
 
   return (
-    <EdgeWrapper>
-      <ButtonContainer>
-        {state.enabled.map((status, index) => (
-          <Button
-            key={index}
-            status={status}
-            i={index % state.n}
-            j={Math.floor(index / state.n)}
-          />
-        ))}
-      </ButtonContainer>
-    </EdgeWrapper>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <EdgeWrapper>
+        <ButtonContainer>
+          {state.enabled.map((status, index) => (
+            <Button
+              key={index}
+              status={status}
+              i={index % state.n}
+              j={Math.floor(index / state.n)}
+            />
+          ))}
+        </ButtonContainer>
+      </EdgeWrapper>
+      <ResetButton />
+    </div>
   );
 };
 
@@ -460,11 +509,12 @@ interface Props {
 export const PuzzleWrapper = (props: Props) => {
   const { details, highlightErrors, isPlayground, playgroundFeatures } = props;
 
-  const [puzzleContext] = useState<PuzzleInfo>({
+  const [puzzleContext, setPuzzleContext] = useState<PuzzleInfo>({
     puzzle: new Puzzle(details),
     isPlayground,
     playgroundFeatures,
     highlightErrors,
+    attemptKey: Math.random().toString(),
   });
 
   const { puzzle } = puzzleContext;
@@ -475,9 +525,20 @@ export const PuzzleWrapper = (props: Props) => {
     setState(puzzle.toggle(i, j, newStatus));
   }, [puzzle]);
 
+  const reset = useCallback(() => {
+    setState(puzzle.reset());
+
+    setPuzzleContext({
+      ...puzzleContext,
+      attemptKey: Math.random().toString(),
+    })
+  }, [puzzle, puzzleContext, setPuzzleContext]);
+
+  const actions = useMemo(() => ({ reset, onToggle }), [onToggle, reset]);
+
   return (
     <PuzzleContext.Provider value={puzzleContext}>
-      <PuzzleStateContext.Provider value={[state, onToggle]}>
+      <PuzzleStateContext.Provider value={[state, actions]}>
         <div style={{
           backgroundColor: (state.complete && !isPlayground) ? 'hsla(120, 80%, 80%, 50%)' : '',
           padding: '8px',

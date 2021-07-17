@@ -25,7 +25,7 @@ const TodaysPage = (props: DayProps) => {
   return (
     <Container>
       {props.links}
-      <Typography variant="h3">Day 3</Typography>
+      <Typography variant="h3">Day 3: A fuzzy number</Typography>
       <p>
         Let's continue adding more features!
       </p>

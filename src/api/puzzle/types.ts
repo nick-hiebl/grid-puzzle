@@ -6,6 +6,7 @@ export interface PuzzleState {
 
 export enum EdgeClue {
   NO_TRIPLES = 'NO_TRIPLES',
+  YES_TRIPLES = 'YES_TRIPLES',
 }
 
 export interface PuzzleDetails {

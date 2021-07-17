@@ -16,7 +16,7 @@ const TodaysPage = (props: DayProps) => {
   return (
     <Container>
       {props.links}
-      <Typography variant="h3">Day 1</Typography>
+      <Typography variant="h3">Day 1: The beginning</Typography>
       <p>
         I'm making a grid-based puzzle and going to add a new idea/mechanic to
         the puzzles each day to make them more interesting/challenging or add
