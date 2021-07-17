@@ -184,7 +184,7 @@ const ButtonContainer = (props: ButtonContainerProps) => {
 const edgeStyle = (n: number): CSSProperties => ({
   display: 'inline-grid',
   gridTemplateRows: `45px ${n * 100 + 8}px`,
-  gridTemplateColumns: `auto ${n * 100 + 8}px 45px`,
+  gridTemplateColumns: `auto ${n * 100 + 8}px auto`,
   gridTemplateAreas: '"extra-details top-clues total-count" "extra-details main-section side-clues"',
 });
 
@@ -439,6 +439,7 @@ const EdgeWrapper = (props: { children: React.ReactElement }) => {
         display: 'grid',
         gridTemplateRows: '100px '.repeat(puzzle.n),
         alignContent: 'space-around',
+        justifyContent: 'start',
       }}>
         {puzzle.rowCounts.map((c, index) => (
           <EdgeClueComponent
