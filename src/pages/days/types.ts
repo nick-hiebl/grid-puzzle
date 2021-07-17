@@ -7,4 +7,5 @@ export interface DayInfo {
   description?: string;
   link: string;
   component: (props: DayProps) => JSX.Element;
+  hidden?: boolean;
 }

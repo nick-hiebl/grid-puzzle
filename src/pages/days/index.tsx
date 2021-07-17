@@ -2,6 +2,7 @@ import Day1 from './day1';
 import Day2 from './day2';
 import Day3 from './day3';
 import Day4 from './day4';
+import Day5 from './day5';
 
 import type { DayInfo } from './types';
 
@@ -29,5 +30,12 @@ export const dayData: DayInfo[] = [
     description: 'Whatever could it mean?',
     link: '/days/4',
     component: Day4,
+  },
+  {
+    title: 'Day 5: Time for some leeway',
+    description: 'Does this help or hinder?',
+    link: '/days/5',
+    component: Day5,
+    hidden: true,
   },
 ];

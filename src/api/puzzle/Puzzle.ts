@@ -47,7 +47,8 @@ export default class Puzzle {
   readonly rowCounts: number[];
   readonly colRules: (EdgeClue | null)[];
   readonly rowRules: (EdgeClue | null)[];
-  readonly totalActive: number;
+  private readonly minTotal: number | undefined;
+  private readonly maxTotal: number | undefined;
   readonly numContinents: number;
 
   constructor(details: PuzzleDetails) {
@@ -74,7 +75,13 @@ export default class Puzzle {
       throw new Error('Invalid requirement forsome column ' + JSON.stringify(this.rowCounts));
     }
 
-    this.totalActive = readFallback(details.totalActive);
+    if (details.totalActive) {
+      this.maxTotal = this.minTotal = details.totalActive;
+    } else {
+      this.maxTotal = details.maxTotal;
+      this.minTotal = details.minTotal;
+    }
+
     this.numContinents = readFallback(details.numContinents);
   }
 
@@ -108,33 +115,42 @@ export default class Puzzle {
     return countContinents(state);
   }
 
-  isValid(state: PuzzleState): boolean {
-    if (this.totalActive >= 0) {
-      const numActive = state.enabled.reduce((a, b) => a + +b, 0);
+  isCountValid(state: PuzzleState) {
+    if (!this.maxTotal && !this.minTotal) {
+      return true;
+    }
 
-      if (numActive !== this.totalActive) {
-        return false;
+    const total = state.enabled.reduce((a, b) => a + (+b), 0);
+
+    if (this.maxTotal && total > this.maxTotal) {
+      return false;
+    } else if (this.minTotal && total < this.minTotal) {
+      return false;
+    }
+
+    return true;
+  }
+
+  totalRequirement(): string | undefined {
+    if (this.minTotal && this.maxTotal) {
+      if (this.minTotal === this.maxTotal) {
+        return this.minTotal.toString();
       }
+
+      return `${this.minTotal}-${this.maxTotal}`;
+    } else if (this.minTotal) {
+      return `≥${this.minTotal}`;
+    } else if (this.maxTotal) {
+      return `≤${this.maxTotal}`;
     }
+  }
 
-    const colsValid = this.colCounts.every((count, index) => {
-      const thisLine = state.enabled.filter((_, subIndex) => subIndex % this.n === index);
+  isValid(state: PuzzleState): boolean {
+    if (!this.isCountValid(state)) return false;
 
-      return this.isLineValid(thisLine, this.colRules[index], count);
-    });
-
-    if (!colsValid) {
-      return false;
-    }
-
-    const rowsValid = this.rowCounts.every((count, index) => {
-      const thisLine = state.enabled.slice(index * this.n, (index + 1) * this.n);
-
-      return this.isLineValid(thisLine, this.rowRules[index], count);
-    });
-
-    if (!rowsValid) {
-      return false;
+    for (let i = 0; i < this.n; i++) {
+      if (!this.isRowValid(state, i)) return false;
+      if (!this.isColValid(state, i)) return false;
     }
 
     if (this.numContinents !== -1) {

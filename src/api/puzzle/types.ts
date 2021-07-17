@@ -13,5 +13,7 @@ export interface PuzzleDetails {
   colClues?: (number | EdgeClue | null)[];
   rowClues?: (number | EdgeClue | null)[];
   totalActive?: number;
+  minTotal?: number;
+  maxTotal?: number;
   numContinents?: number;
 }

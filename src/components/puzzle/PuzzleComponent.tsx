@@ -353,13 +353,14 @@ const ActiveCount = () => {
   const { puzzle, highlightErrors } = usePuzzle();
   const [state] = usePuzzleState();
 
-  if (puzzle.totalActive === -1) {
+  const totalRequirement = puzzle.totalRequirement();
+
+  if (!totalRequirement) {
     return null;
   }
 
   const shouldHighlight = highlightErrors
-    && puzzle.totalActive !== -1
-    && state.enabled.reduce((a, b) => a + (+b), 0) !== puzzle.totalActive;
+    && !puzzle.isCountValid(state);
 
   return (
     <div style={{
@@ -368,7 +369,7 @@ const ActiveCount = () => {
       justifyContent: 'center',
     }}>
       <strong style={{ fontSize: '2em', color: shouldHighlight ? 'red' : 'inherit' }}>
-        {puzzle.totalActive}
+        {totalRequirement}
       </strong>
     </div>
   );
@@ -382,7 +383,7 @@ const EdgeWrapper = (props: { children: React.ReactElement }) => {
   const anyEdgeClues = puzzle.colCounts.some(v => v >= 0)
     || puzzle.rowCounts.some(v => v >= 0);
   
-  if (!anyEdgeClues && puzzle.totalActive === -1 && !playgroundFeatures?.length) {
+  if (!anyEdgeClues && !puzzle.totalRequirement() && !playgroundFeatures?.length) {
     return children;
   }
 

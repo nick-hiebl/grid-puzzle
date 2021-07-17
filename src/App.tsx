@@ -36,6 +36,8 @@ const NavItem = (props: { children: React.ReactChild, to: string }) => {
   );
 }
 
+const shownDays = dayData.filter(day => !day.hidden);
+
 function App() {
   return (
     <Router>
@@ -47,7 +49,7 @@ function App() {
           </Typography>
           <NavItem to="/">Home</NavItem>
           <NavItem to={dayData[0].link}>Day 1</NavItem>
-          <NavItem to={dayData[dayData.length - 1].link}>Today</NavItem>
+          <NavItem to={shownDays[shownDays.length - 1].link}>Today</NavItem>
         </Toolbar>
       </AppBar>
       <Switch>
@@ -62,7 +64,7 @@ function App() {
                     </Link>
                   </div>
                 )}
-                {index < (dayData.length - 1) && (
+                {index < (shownDays.length - 1) && (
                   <div style={{ float: 'right' }}>
                     <Link to={dayData[index + 1].link}>
                       {dayData[index + 1].title} →

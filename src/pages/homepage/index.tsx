@@ -11,7 +11,7 @@ const HomePage = () => {
       <br />
       <Typography variant="h3">Grid puzzles website</Typography>
       <p>Hopefully the home of some interesting puzzles.</p>
-      {dayData.map(day => (
+      {dayData.filter(day => !day.hidden).map(day => (
         <Fragment key={day.link}>
           <Link to={day.link}>
             <Card>
