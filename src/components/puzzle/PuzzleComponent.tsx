@@ -1,13 +1,25 @@
-import React, { CSSProperties, useCallback, useState, useEffect } from 'react';
+import React, { CSSProperties, useCallback, useContext, useEffect, useState } from 'react';
 
 import Puzzle from '../../api/puzzle';
 import type { PuzzleDetails, PuzzleState } from '../../api/puzzle';
 import { EdgeClue } from '../../api/puzzle';
 
+const defaultPuzzle = new Puzzle({ n: 1 });
+
+const PuzzleContext = React.createContext<[Puzzle]>([defaultPuzzle]);
+
+type PuzzleStateUpdater = (i: number, j: number, status: boolean) => void;
+
+const PuzzleStateContext = React.createContext<
+  [PuzzleState, PuzzleStateUpdater]
+>([defaultPuzzle.getState(), () => {}]);
+
+const usePuzzle = () => useContext(PuzzleContext);
+const usePuzzleState = () => useContext(PuzzleStateContext);
+
 interface ButtonProps {
   i: number;
   j: number;
-  onToggle: (newStatus: boolean) => void;
   status: boolean;
 }
 
@@ -58,9 +70,11 @@ function isRightClick(event: React.MouseEvent) {
 }
 
 const Button = (props: ButtonProps) => {
-  const { status, onToggle } = props;
+  const { i, j, status } = props;
   const [img, setImage] = useState(randomImage(status));
   const [enabled, setEnabled] = useState(false);
+
+  const [, onToggle] = usePuzzleState();
 
   useEffect(() => {
     setImage(randomImage(status));
@@ -72,7 +86,7 @@ const Button = (props: ButtonProps) => {
       event.preventDefault();
       setImage(randomImage(false));
       if (status || !enabled) {
-        onToggle(false);
+        onToggle(i, j, false);
         setEnabled(true);
       } else {
         setEnabled(false);
@@ -80,15 +94,15 @@ const Button = (props: ButtonProps) => {
     } else {
       if (status) {
         setImage(randomImage(false));
-        onToggle(false);
+        onToggle(i, j, false);
         setEnabled(false);
       } else {
         setImage(randomImage(true));
-        onToggle(true);
+        onToggle(i, j, true);
         setEnabled(true);
       }
     }
-  }, [enabled, onToggle, status]);
+  }, [enabled, i, j, onToggle, status]);
 
   return (
     <button
@@ -262,8 +276,10 @@ const DetailsColumn = (props: { puzzle: Puzzle }) => {
   )
 };
 
-const EdgeWrapper = (props: { puzzle: Puzzle; children: React.ReactElement }) => {
-  const { children, puzzle } = props;
+const EdgeWrapper = (props: { children: React.ReactElement }) => {
+  const { children } = props;
+
+  const [puzzle] = usePuzzle();
 
   const anyEdgeClues = puzzle.colCounts.some(v => v >= 0)
     || puzzle.rowCounts.some(v => v >= 0);
@@ -324,32 +340,20 @@ const EdgeWrapper = (props: { puzzle: Puzzle; children: React.ReactElement }) =>
   );
 };
 
-interface InnerPuzzleProps {
-  onToggle: (i: number, j: number) => (newStatus: boolean) => void;
-  puzzle: Puzzle;
-  state: PuzzleState;
-}
-
-export const PuzzleComponent = (props: InnerPuzzleProps) => {
-  const { onToggle, puzzle, state } = props;
+export const PuzzleComponent = () => {
+  const [state] = usePuzzleState();
 
   return (
-    <EdgeWrapper puzzle={puzzle}>
-      <ButtonContainer n={puzzle.n}>
-        {state.enabled.map((status, index) => {
-          const i = index % puzzle.n,
-            j = Math.floor(index / puzzle.n);
-          
-          return (
-            <Button
-              key={index}
-              status={status}
-              onToggle={onToggle(i, j)}
-              i={index % puzzle.n}
-              j={Math.floor(index / puzzle.n)}
-            />
-          );
-        })}
+    <EdgeWrapper>
+      <ButtonContainer n={state.n}>
+        {state.enabled.map((status, index) => (
+          <Button
+            key={index}
+            status={status}
+            i={index % state.n}
+            j={Math.floor(index / state.n)}
+          />
+        ))}
       </ButtonContainer>
     </EdgeWrapper>
   );
@@ -366,20 +370,20 @@ export const PuzzleWrapper = (props: Props) => {
 
   const [state, setState] = useState<PuzzleState>(puzzle.getState());
 
-  const onToggle = useCallback((i: number, j: number) => (newStatus: boolean) => {
+  const onToggle = useCallback((i: number, j: number, newStatus: boolean) => {
     setState(puzzle.toggle(i, j, newStatus));
   }, [puzzle]);
 
   return (
-    <div style={{
-      backgroundColor: state.complete ? 'hsla(120, 80%, 80%, 50%)' : '',
-      padding: '8px',
-    }}>
-      <PuzzleComponent
-        puzzle={puzzle}
-        onToggle={onToggle}
-        state={state}
-      />
-    </div>
+    <PuzzleContext.Provider value={[puzzle]}>
+      <PuzzleStateContext.Provider value={[state, onToggle]}>
+        <div style={{
+          backgroundColor: state.complete ? 'hsla(120, 80%, 80%, 50%)' : '',
+          padding: '8px',
+        }}>
+          <PuzzleComponent />
+        </div>
+      </PuzzleStateContext.Provider>
+    </PuzzleContext.Provider>
   )
 }
