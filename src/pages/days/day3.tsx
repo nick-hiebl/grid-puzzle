@@ -10,6 +10,8 @@ const PUZZLE_0A = { n: 3, colClues: [null,null,null], rowClues: [null,null,null]
 const PUZZLE_0B = { n: 3, colClues: [null,null,null], rowClues: [null,null,null], totalActive: 4, numContinents: 2 };
 const PUZZLE_0C = { n: 3, colClues: [null,null,null], rowClues: [null,null,null], totalActive: 4, numContinents: 3 };
 const PUZZLE_0D = { n: 3, colClues: [null,null,null], rowClues: [null,null,null], totalActive: 4, numContinents: 4 };
+const PUZZLE_0E = { n: 2, colClues: [null,null], rowClues: [null,null], totalActive: 2, numContinents: 1 };
+const PUZZLE_0F = { n: 2, colClues: [null,null], rowClues: [null,null], totalActive: 2, numContinents: 2 };
 const PUZZLE_1 = { n: 3, colClues: [2,1,2], rowClues: [1,2,2], numContinents: 2 };
 const PUZZLE_2 = { n: 3, colClues: [null,1,3], rowClues: [null,2,2], numContinents: 2 };
 const PUZZLE_3 = { n: 4, colClues: [2,4,2,null], rowClues: [2,4,null,null], totalActive: 10, numContinents: 2 };
@@ -67,6 +69,15 @@ const TodaysPage = (props: DayProps) => {
         Hopefully this one should be understandable at this point.
       </p>
       <PuzzleWrapper details={PUZZLE_0D} />
+      <br />
+
+      <Typography variant="h4">Intro Puzzle #6</Typography>
+      <PuzzleWrapper details={PUZZLE_0E} />
+      <br />
+
+      <Typography variant="h4">Intro Puzzle #7</Typography>
+      <p>I just want to clarify this.</p>
+      <PuzzleWrapper details={PUZZLE_0F} />
       <br />
 
       <Typography variant="h4">Puzzle #1</Typography>
