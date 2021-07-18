@@ -1,6 +1,6 @@
 import countContinents from './countContinents';
-import type { PuzzleDetails, PuzzleState } from './types';
-import { EdgeClue } from './types';
+import type { GridFeature, PuzzleDetails, PuzzleState } from './types';
+import { EdgeClue, GridFeatureKind } from './types';
 
 function readFallback(value: number | undefined, fallback = -1) {
   if (value === undefined) {
@@ -69,6 +69,7 @@ export default class Puzzle {
   private readonly minTotal: number | undefined;
   private readonly maxTotal: number | undefined;
   readonly numContinents: number;
+  readonly gridFeatures: Record<string, GridFeature>;
 
   constructor(details: PuzzleDetails) {
     const n = details.n;
@@ -102,6 +103,13 @@ export default class Puzzle {
     }
 
     this.numContinents = readFallback(details.numContinents);
+
+    this.gridFeatures = {};
+    for (const feature of details.gridFeatures || []) {
+      const index = feature.i + feature.j * n;
+
+      this.gridFeatures[index] = feature;
+    }
   }
 
   isLineValid(line: boolean[], rule: EdgeClue | null, count: number): boolean {
@@ -142,6 +150,49 @@ export default class Puzzle {
 
   static countContinents(state: PuzzleState) {
     return countContinents(state);
+  }
+
+  getGridFeature(i: number, j: number): GridFeature | undefined {
+    const index = i + j * this.n;
+
+    return this.gridFeatures[index];
+  }
+
+  getAdjacentCount(i: number, j: number, state: PuzzleState): number {
+    let count = 0;
+
+    for (let di = -1; di <= 1; di++) {
+      if (i + di < 0 || i + di >= this.n) {
+        continue;
+      }
+      for (let dj = -1; dj <= 1; dj++) {
+        if (j + dj < 0 || j + dj >= this.n) {
+          continue;
+        }
+
+        if (state.enabled[i + di + this.n * (j + dj)]) {
+          count++;
+        }
+      }
+    }
+
+    return count;
+  }
+
+  gridFeatureValid(i: number, j: number, state: PuzzleState): boolean {
+    const feature = this.getGridFeature(i, j);
+
+    if (!feature) {
+      return true;
+    }
+
+    if (feature.kind === GridFeatureKind.NEARBY_COUNT) {
+      if (this.getAdjacentCount(i, j, state) !== feature.value) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   isCountValid(state: PuzzleState) {
@@ -186,6 +237,14 @@ export default class Puzzle {
       const continents = countContinents(state);
 
       if (continents !== this.numContinents) {
+        return false;
+      }
+    }
+
+    for (const key of Object.keys(this.gridFeatures)) {
+      const feature = this.gridFeatures[key];
+
+      if (!this.gridFeatureValid(feature.i, feature.j, state)) {
         return false;
       }
     }

@@ -20,4 +20,16 @@ export interface PuzzleDetails {
   minTotal?: number;
   maxTotal?: number;
   numContinents?: number;
+  gridFeatures?: GridFeature[];
+}
+
+export enum GridFeatureKind {
+  NEARBY_COUNT = 'NEARBY_COUNT',
+}
+
+export interface GridFeature {
+  kind: GridFeatureKind;
+  i: number;
+  j: number;
+  value: number;
 }

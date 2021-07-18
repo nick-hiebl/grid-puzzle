@@ -5,6 +5,7 @@ import Day4 from './day4';
 import Day5 from './day5';
 import Day6 from './day6';
 import Day7 from './day7';
+import Day8 from './day8';
 
 import type { DayInfo } from './types';
 
@@ -44,7 +45,6 @@ export const dayData: DayInfo[] = [
     description: 'This looks a little familiar',
     link: '/days/6',
     component: Day6,
-    hidden: true,
   },
   {
     title: 'Day 7: Counting... squares?',
@@ -52,7 +52,14 @@ export const dayData: DayInfo[] = [
     link: '/days/7',
     component: Day7,
     hidden: true,
-  }
+  },
+  {
+    title: 'Day 8: Numbers on the board',
+    description: 'More counting?',
+    link: '/days/8',
+    component: Day8,
+    hidden: true,
+  },
 ];
 
 if (window.location.host.includes('127')) {

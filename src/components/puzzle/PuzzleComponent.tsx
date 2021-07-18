@@ -10,6 +10,7 @@ import React, {
 import Puzzle from '../../api/puzzle';
 import type { PuzzleDetails, PuzzleState } from '../../api/puzzle';
 import { EdgeClue } from '../../api/puzzle';
+import { GridFeature, GridFeatureKind } from '../../api/puzzle/types';
 
 const GREEN_TO_BLUE = 'brightness(0) saturate(100%) invert(41%) sepia(48%) saturate(4528%) hue-rotate(200deg) brightness(99%) contrast(105%)';
 const GREEN_TO_RED = 'brightness(0) saturate(100%) invert(11%) sepia(98%) saturate(7155%) hue-rotate(0deg) brightness(101%) contrast(109%)';
@@ -23,7 +24,7 @@ export enum PlaygroundFeatures {
 interface PuzzleInfo {
   puzzle: Puzzle;
   isPlayground?: boolean;
-  playgroundFeatures?: PlaygroundFeatures[];
+  playgroundFeatures?: (PlaygroundFeatures | GridFeature)[];
   highlightErrors?: boolean;
   attemptKey: string;
 }
@@ -107,6 +108,63 @@ function isRightClick(event: React.MouseEvent) {
   return false;
 }
 
+function isGridFeature(feature: GridFeature | PlaygroundFeatures): feature is GridFeature {
+  return typeof(feature) !== 'string';
+}
+
+const useGridFeatureDetails = (
+  i: number,
+  j: number,
+  status: boolean,
+): React.ReactNode | null => {
+  const { puzzle, isPlayground, playgroundFeatures, highlightErrors } = usePuzzle();
+  const [state] = usePuzzleState();
+
+  if (isPlayground) {
+    const feature = playgroundFeatures?.filter(isGridFeature)
+      .find((f: GridFeature) => f.i === i && f.j === j);
+
+    if (!feature) {
+      return null;
+    }
+
+    if (feature.kind === GridFeatureKind.NEARBY_COUNT) {
+      return (
+        <span style={{
+          color: '#147eff',
+          fontSize: '3em',
+          fontWeight: 'bolder',
+          WebkitTextStroke: status ? '2px white' : undefined,
+        }}>
+          {puzzle.getAdjacentCount(i, j, state)}
+        </span>
+      );
+    }
+  } else {
+    const feature = puzzle.getGridFeature(i, j);
+
+    if (!feature) {
+      return null;
+    }
+
+    const highlight = highlightErrors && !puzzle.gridFeatureValid(i, j, state);
+
+    if (feature?.kind === GridFeatureKind.NEARBY_COUNT) {
+      return (
+        <span style={{
+          color: highlight ? 'red' : status ? 'white' : 'black',
+          fontSize: '3em',
+          fontWeight: 'bolder',
+        }}>
+          {feature.value}
+        </span>
+      );
+    }
+
+    return null;
+  }
+};
+
 const Button = (props: ButtonProps) => {
   const { i, j, status } = props;
   const [img, setImage] = useState(randomImage(status));
@@ -146,6 +204,8 @@ const Button = (props: ButtonProps) => {
     }
   }, [enabled, i, j, onToggle, status]);
 
+  const featureContent = useGridFeatureDetails(i, j, status);
+
   return (
     <button
       onClick={onClick}
@@ -157,7 +217,9 @@ const Button = (props: ButtonProps) => {
         backgroundSize: 'cover',
         padding: '0',
       }}
-    />
+    >
+      {featureContent}
+    </button>
   );
 };
 
@@ -337,13 +399,21 @@ const columnStyles: CSSProperties = {
   justifyContent: 'center',
 };
 
+const columnFeatures = [
+  PlaygroundFeatures.CONTINENTS,
+];
+
 const DetailsColumn = () => {
   const { puzzle, isPlayground, playgroundFeatures, highlightErrors } = usePuzzle();
   const [state] = usePuzzleState();
 
   const anyDetails = puzzle.numContinents !== -1;
 
-  if (isPlayground && playgroundFeatures?.length) {
+  if (
+    isPlayground
+    && playgroundFeatures?.length
+    && columnFeatures.some(f => playgroundFeatures?.includes(f))
+  ) {
     return (
       <div style={columnStyles}>
         {playgroundFeatures.includes(PlaygroundFeatures.CONTINENTS) && (
@@ -419,7 +489,7 @@ const EdgeWrapper = (props: { children: React.ReactElement }) => {
   const anyEdgeClues = puzzle.colCounts.some(v => v >= 0)
     || puzzle.rowCounts.some(v => v >= 0);
   
-  if (!anyEdgeClues && !puzzle.totalRequirement() && !playgroundFeatures?.length) {
+  if (!anyEdgeClues && !puzzle.totalRequirement() && !playgroundFeatures?.some(f => !isGridFeature(f))) {
     return children;
   }
 
@@ -521,7 +591,7 @@ const PuzzleComponent = () => {
 interface Props {
   details: PuzzleDetails;
   isPlayground?: boolean;
-  playgroundFeatures?: PlaygroundFeatures[];
+  playgroundFeatures?: (PlaygroundFeatures | GridFeature)[];
   highlightErrors?: boolean;
 }
 
