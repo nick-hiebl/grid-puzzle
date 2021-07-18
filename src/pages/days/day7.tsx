@@ -63,16 +63,16 @@ const PUZZLE_6 = {
 };
 const PUZZLE_HARD_1 = {
   n: 5,
-  colClues: [3,3,2,Ec.SQ_1,4],
-  rowClues: [4,Ec.SQ_1,2,Ec.SQ_2,Ec.SQ_1],
-  numContinents: 1,
-};
-const PUZZLE_HARD_2 = {
-  n: 5,
   colClues: [3,Ec.SQ_2,4,Ec.SQ_1,3],
   rowClues: [Ec.SQ_1,5,3,Ec.SQ_1,Ec.SQ_1],
   numContinents: 2,
   totalActive: 14,
+};
+const PUZZLE_HARD_2 = {
+  n: 5,
+  colClues: [3,3,2,Ec.SQ_1,4],
+  rowClues: [4,Ec.SQ_1,2,Ec.SQ_2,Ec.SQ_1],
+  numContinents: 1,
 };
 
 const TodaysPage = (props: DayProps) => {
