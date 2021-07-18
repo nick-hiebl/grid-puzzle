@@ -138,6 +138,10 @@ const TodaysPage = (props: DayProps) => {
       <br />
 
       <Typography variant="h4">Final puzzle #2</Typography>
+      <p>
+        <strong>Warning:</strong> This is by far the hardest puzzle I've made
+        so far.
+      </p>
       <PuzzleWrapper details={PUZZLE_HARD_2} />
       <br />
 
