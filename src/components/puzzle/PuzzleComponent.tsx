@@ -204,6 +204,18 @@ const RULE_DETAILS: Record<EdgeClue, { image: string; alt: string }> = {
     image: image('counts/cross-ccc.png'),
     alt: 'NOT circle circle cross',
   },
+  [EdgeClue.SQ_1]: {
+    image: image('counts/square-1.png'),
+    alt: 'One square',
+  },
+  [EdgeClue.SQ_2]: {
+    image: image('counts/square-2.png'),
+    alt: 'Two squares',
+  },
+  [EdgeClue.SQ_3]: {
+    image: image('counts/square-3.png'),
+    alt: 'Three squares',
+  },
 };
 
 const useEdgeClueHighlight = (horizontal: boolean, index: number): boolean => {

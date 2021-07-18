@@ -38,6 +38,25 @@ function hasTriples(seq: boolean[]) {
   return false;
 }
 
+function countGaps(seq: boolean[]) {
+  let count = 0;
+  let inGap = false;
+  for (const item of seq) {
+    if (item) {
+      inGap = false;
+    } else {
+      if (!inGap) {
+        // Entered new gap
+        count++;
+        inGap = true;
+      }
+      // Otherwise continuing gap, so no state change needed
+    }
+  }
+
+  return count;
+}
+
 export default class Puzzle {
   readonly n: number;
 
@@ -94,6 +113,12 @@ export default class Puzzle {
       if (!hasTriples(line)) {
         return false;
       }
+    } else if (rule === EdgeClue.SQ_1) {
+      if (countGaps(line) !== 1) return false;
+    } else if (rule === EdgeClue.SQ_2) {
+      if (countGaps(line) !== 2) return false;
+    } else if (rule === EdgeClue.SQ_3) {
+      if (countGaps(line) !== 3) return false;
     }
 
     if (count === -1) return true;

@@ -63,7 +63,7 @@ const TodaysPage = (props: DayProps) => {
         on these puzzles.
       </p>
 
-      <Typography variant="h4">Intro Puzzle #1</Typography>
+      <Typography variant="h4">Intro Puzzle</Typography>
       <PuzzleWrapper details={PUZZLE_0} highlightErrors />
       <br />
 

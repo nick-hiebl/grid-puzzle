@@ -4,6 +4,7 @@ import Day3 from './day3';
 import Day4 from './day4';
 import Day5 from './day5';
 import Day6 from './day6';
+import Day7 from './day7';
 
 import type { DayInfo } from './types';
 
@@ -44,5 +45,18 @@ export const dayData: DayInfo[] = [
     link: '/days/6',
     component: Day6,
     hidden: true,
+  },
+  {
+    title: 'Day 7: Counting... squares?',
+    description: 'I thought we already had enough squares',
+    link: '/days/7',
+    component: Day7,
+    hidden: true,
   }
 ];
+
+if (window.location.host.includes('127')) {
+  for (const day of dayData) {
+    day.hidden = false;
+  }
+}
