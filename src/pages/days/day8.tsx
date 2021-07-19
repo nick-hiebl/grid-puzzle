@@ -35,16 +35,16 @@ const PUZZLE_3 = {
 };
 const PUZZLE_4 = {
   n: 5,
-  rowClues: [null,2,4,4,null],
-  colClues: [4,null,4,1,3],
-  gridFeatures: [near(1,1,7), near(4,2,4), near(2,3,5)],
+  rowClues: [Ec.NO_TRIPLES,Ec.YES_TRIPLES,3,null,3],
+  colClues: [3,4,Ec.YES_TRIPLES,Ec.SQ_2,3],
+  gridFeatures: [near(2,1,5), near(1,3,9)],
 };
 
 const PUZZLE_HARD_1 = {
   n: 5,
-  rowClues: [Ec.NO_TRIPLES,Ec.YES_TRIPLES,3,null,3],
-  colClues: [3,4,Ec.YES_TRIPLES,Ec.SQ_2,3],
-  gridFeatures: [near(2,1,5), near(1,3,9)],
+  rowClues: [null,2,4,4,null],
+  colClues: [4,null,4,1,3],
+  gridFeatures: [near(1,1,7), near(4,2,4), near(2,3,5)],
 };
 const PUZZLE_HARD_2 = {
   n: 5,
@@ -88,7 +88,7 @@ const TodaysPage = (props: DayProps) => {
       />
       <br />
 
-      <Typography variant="h4">Intro Puzzle #1</Typography>
+      <Typography variant="h4">Intro Puzzle</Typography>
       <p>
         I think you should understand this one easily enough.
       </p>
@@ -111,14 +111,12 @@ const TodaysPage = (props: DayProps) => {
       <br />
 
       <Typography variant="h4">Puzzle #4</Typography>
-      <p>This one is a likely time sink.</p>
       <PuzzleWrapper details={PUZZLE_4} highlightErrors />
       <br />
 
       <Typography variant="h4">Final puzzle #1</Typography>
       <p>
-        <strong>Warning:</strong> These are definitely certified <i>tricky ones
-        </i>. Please don't spend all day attempting these.
+        These are tricky ones. Please don't spend all day attempting these.
       </p>
       <PuzzleWrapper details={PUZZLE_HARD_1} />
       <br />
