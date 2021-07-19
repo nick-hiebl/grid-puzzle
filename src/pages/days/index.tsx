@@ -7,6 +7,7 @@ import Day6 from './day6';
 import Day7 from './day7';
 import Day8 from './day8';
 import Day9 from './day9';
+import Day10 from './day10';
 
 import type { DayInfo } from './types';
 
@@ -52,7 +53,6 @@ export const dayData: DayInfo[] = [
     description: 'I thought we already had enough squares',
     link: '/days/7',
     component: Day7,
-    hidden: true,
   },
   {
     title: 'Day 8: Numbers on the board',
@@ -63,11 +63,18 @@ export const dayData: DayInfo[] = [
   },
   {
     title: 'Day 9: Time for some force',
-    description: '...',
+    description: 'Why did I commit to making descriptions for these?',
     link: '/days/9',
     component: Day9,
     hidden: true,
-  }
+  },
+  {
+    title: "Day 10: Well that's not it",
+    description: 'Perhaps not this one',
+    link: '/days/10',
+    component: Day10,
+    hidden: true,
+  },
 ];
 
 if (window.location.host.includes('127')) {
