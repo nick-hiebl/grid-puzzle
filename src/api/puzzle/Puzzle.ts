@@ -190,6 +190,10 @@ export default class Puzzle {
       if (this.getAdjacentCount(i, j, state) !== feature.value) {
         return false;
       }
+    } else if (feature.kind === GridFeatureKind.FORCED) {
+      if (state.enabled[i + this.n * j] !== !!feature.value) {
+        return false;
+      }
     }
 
     return true;

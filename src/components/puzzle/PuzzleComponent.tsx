@@ -12,6 +12,7 @@ import type { PuzzleDetails, PuzzleState } from '../../api/puzzle';
 import { EdgeClue } from '../../api/puzzle';
 import { GridFeature, GridFeatureKind } from '../../api/puzzle/types';
 
+const TO_BLACK = 'brightness(0) saturate(100%)';
 const GREEN_TO_BLUE = 'brightness(0) saturate(100%) invert(41%) sepia(48%) saturate(4528%) hue-rotate(200deg) brightness(99%) contrast(105%)';
 const GREEN_TO_RED = 'brightness(0) saturate(100%) invert(11%) sepia(98%) saturate(7155%) hue-rotate(0deg) brightness(101%) contrast(109%)';
 
@@ -139,7 +140,7 @@ const useGridFeatureDetails = (
           {puzzle.getAdjacentCount(i, j, state)}
         </span>
       );
-    }
+    } // No playground for FORCED
   } else {
     const feature = puzzle.getGridFeature(i, j);
 
@@ -147,9 +148,10 @@ const useGridFeatureDetails = (
       return null;
     }
 
-    const highlight = highlightErrors && !puzzle.gridFeatureValid(i, j, state);
+    const valid = puzzle.gridFeatureValid(i, j, state);
+    const highlight = highlightErrors && !valid;
 
-    if (feature?.kind === GridFeatureKind.NEARBY_COUNT) {
+    if (feature.kind === GridFeatureKind.NEARBY_COUNT) {
       return (
         <span style={{
           color: highlight ? 'red' : status ? 'white' : 'black',
@@ -158,6 +160,20 @@ const useGridFeatureDetails = (
         }}>
           {feature.value}
         </span>
+      );
+    } else if (feature.kind === GridFeatureKind.FORCED) {
+      const img = image(feature.value ? 'counts/is-on.png' : 'counts/is-off.png');
+
+      return (
+        <img
+          src={img}
+          alt={feature.value ? 'Solid circle' : 'Empty circle'}
+          width="100px"
+          height="100px"
+          style={{
+            filter: !highlight ? TO_BLACK : GREEN_TO_RED,
+          }}
+        />
       );
     }
 

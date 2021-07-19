@@ -25,6 +25,7 @@ export interface PuzzleDetails {
 
 export enum GridFeatureKind {
   NEARBY_COUNT = 'NEARBY_COUNT',
+  FORCED = 'FORCED',
 }
 
 export interface GridFeature {

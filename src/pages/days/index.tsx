@@ -6,6 +6,7 @@ import Day5 from './day5';
 import Day6 from './day6';
 import Day7 from './day7';
 import Day8 from './day8';
+import Day9 from './day9';
 
 import type { DayInfo } from './types';
 
@@ -60,6 +61,13 @@ export const dayData: DayInfo[] = [
     component: Day8,
     hidden: true,
   },
+  {
+    title: 'Day 9: Time for some force',
+    description: '...',
+    link: '/days/9',
+    component: Day9,
+    hidden: true,
+  }
 ];
 
 if (window.location.host.includes('127')) {

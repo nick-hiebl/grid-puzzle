@@ -25,3 +25,12 @@ export function near(i: number, j: number, count: number): GridFeature {
     value: count,
   }
 }
+
+export function forced(i: number, j: number, on: boolean): GridFeature {
+  return {
+    kind: GridFeatureKind.FORCED,
+    i,
+    j,
+    value: +on,
+  }
+}
