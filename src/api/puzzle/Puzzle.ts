@@ -57,6 +57,20 @@ function countGaps(seq: boolean[]) {
   return count;
 }
 
+function checkNonos(line: boolean[], clusters: number[]) {
+  const foundClusters = line.map(x => +x) // Convert to numbers
+    .join('') // Join into big string
+    .split('0') // Split on zeros
+    .filter(x => x.length > 0) // Exclude "empty" sections
+    .map(x => x.length); // Get length
+
+  if (foundClusters.length !== clusters.length) {
+    return false;
+  }
+
+  return foundClusters.every((cluster, i) => cluster === clusters[i]);
+}
+
 export default class Puzzle {
   readonly n: number;
 
@@ -127,6 +141,11 @@ export default class Puzzle {
       if (countGaps(line) !== 2) return false;
     } else if (rule === EdgeClue.SQ_3) {
       if (countGaps(line) !== 3) return false;
+    } else if (rule?.startsWith('nonos/')) {
+      const spacing = rule.slice(6).split('-').map(x => parseInt(x, 10));
+      if (!checkNonos(line, spacing)) {
+        return false;
+      }
     }
 
     if (count === -1) return true;
@@ -138,6 +157,8 @@ export default class Puzzle {
 
   isRowValid(state: PuzzleState, index: number) {
     const line = state.enabled.slice(index * this.n, (index + 1) * this.n);
+    // Lines are read from the right-hand-side for some rules, so we must reverse
+    line.reverse();
 
     return this.isLineValid(line, this.rowRules[index], this.rowCounts[index]);
   }

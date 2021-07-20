@@ -294,6 +294,42 @@ const RULE_DETAILS: Record<EdgeClue, { image: string; alt: string }> = {
     image: image('counts/square-3.png'),
     alt: 'Three squares',
   },
+  [EdgeClue.NONO_1_1]: {
+    image: image('counts/nonos/1-1.png'),
+    alt: '1 1',
+  },
+  [EdgeClue.NONO_1_1_1]: {
+    image: image('counts/nonos/1-1-1.png'),
+    alt: '1 1 1',
+  },
+  [EdgeClue.NONO_1_2]: {
+    image: image('counts/nonos/1-2.png'),
+    alt: '1 2',
+  },
+  [EdgeClue.NONO_1_3]: {
+    image: image('counts/nonos/1-3.png'),
+    alt: '1 3',
+  },
+  [EdgeClue.NONO_2_1]: {
+    image: image('counts/nonos/2-1.png'),
+    alt: '2 1',
+  },
+  [EdgeClue.NONO_2_2]: {
+    image: image('counts/nonos/2-2.png'),
+    alt: '2 2',
+  },
+  [EdgeClue.NONO_2_3]: {
+    image: image('counts/nonos/2-3.png'),
+    alt: '2 3',
+  },
+  [EdgeClue.NONO_3_1]: {
+    image: image('counts/nonos/3-1.png'),
+    alt: '3 1',
+  },
+  [EdgeClue.NONO_3_2]: {
+    image: image('counts/nonos/3-2.png'),
+    alt: '3 2',
+  },
 };
 
 const useEdgeClueHighlight = (horizontal: boolean, index: number): boolean => {
@@ -504,8 +540,11 @@ const EdgeWrapper = (props: { children: React.ReactElement }) => {
 
   const anyEdgeClues = puzzle.colCounts.some(v => v >= 0)
     || puzzle.rowCounts.some(v => v >= 0);
+
+  const anyEdgeRules = puzzle.colRules.some(v => !!v)
+    || puzzle.rowRules.some(v => !!v);
   
-  if (!anyEdgeClues && !puzzle.totalRequirement() && !playgroundFeatures?.some(f => !isGridFeature(f))) {
+  if (!anyEdgeClues && !anyEdgeRules && !puzzle.totalRequirement() && !playgroundFeatures?.some(f => !isGridFeature(f))) {
     return children;
   }
 
