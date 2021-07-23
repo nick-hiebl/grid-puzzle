@@ -66,14 +66,12 @@ export const dayData: DayInfo[] = [
     description: 'Why did I commit to making descriptions for these?',
     link: '/days/9',
     component: Day9,
-    hidden: true,
   },
   {
     title: "Day 10: Well that's not it",
     description: 'Perhaps not this one',
     link: '/days/10',
     component: Day10,
-    hidden: true,
   },
   {
     title: 'Day 11: A puzzle you may have seen before',
