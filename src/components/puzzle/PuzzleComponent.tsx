@@ -239,10 +239,10 @@ const Button = (props: ButtonProps) => {
   );
 };
 
-const containerStyle = (n: number, isPlayground?: boolean): CSSProperties => ({
+const containerStyle = (w: number, h: number, isPlayground?: boolean): CSSProperties => ({
   display: 'inline-grid',
-  gridTemplateColumns: '100px '.repeat(n),
-  gridTemplateRows: '100px '.repeat(n),
+  gridTemplateColumns: '100px '.repeat(w),
+  gridTemplateRows: '100px '.repeat(h),
   border: `4px solid ${isPlayground ? '#147eff' : 'black'}`,
 });
 
@@ -253,18 +253,11 @@ interface ButtonContainerProps {
 const ButtonContainer = (props: ButtonContainerProps) => {
   const { puzzle, isPlayground } = usePuzzle();
   return (
-    <div style={containerStyle(puzzle.n, isPlayground)}>
+    <div style={containerStyle(puzzle.w, puzzle.h, isPlayground)}>
       {props.children}
     </div>
   );
 };
-
-const edgeStyle = (n: number): CSSProperties => ({
-  display: 'inline-grid',
-  gridTemplateRows: `45px ${n * 100 + 8}px`,
-  gridTemplateColumns: `auto ${n * 100 + 8}px auto`,
-  gridTemplateAreas: '"extra-details top-clues total-count" "extra-details main-section side-clues"',
-});
 
 const clueStyle: CSSProperties = {
   display: 'flex',
@@ -533,6 +526,13 @@ const ActiveCount = () => {
   );
 }
 
+const edgeStyle = (w: number, h: number): CSSProperties => ({
+  display: 'inline-grid',
+  gridTemplateRows: `45px ${h * 100 + 8}px`,
+  gridTemplateColumns: `auto ${w * 100 + 8}px auto`,
+  gridTemplateAreas: '"extra-details top-clues total-count" "extra-details main-section side-clues"',
+});
+
 const EdgeWrapper = (props: { children: React.ReactElement }) => {
   const { children } = props;
 
@@ -549,12 +549,12 @@ const EdgeWrapper = (props: { children: React.ReactElement }) => {
   }
 
   return (
-    <div style={edgeStyle(puzzle.n)}>
+    <div style={edgeStyle(puzzle.w, puzzle.h)}>
       <DetailsColumn />
       <div style={{
         gridArea: 'top-clues',
         display: 'grid',
-        gridTemplateColumns: '100px '.repeat(puzzle.n),
+        gridTemplateColumns: '100px '.repeat(puzzle.w),
         justifyContent: 'space-around',
       }}>
         {puzzle.colCounts.map((c, index) => (
@@ -574,7 +574,7 @@ const EdgeWrapper = (props: { children: React.ReactElement }) => {
       <div style={{
         gridArea: 'side-clues',
         display: 'grid',
-        gridTemplateRows: '100px '.repeat(puzzle.n),
+        gridTemplateRows: '100px '.repeat(puzzle.h),
         alignContent: 'space-around',
         justifyContent: 'start',
       }}>
@@ -632,8 +632,8 @@ const PuzzleComponent = () => {
             <Button
               key={index}
               status={status}
-              i={index % state.n}
-              j={Math.floor(index / state.n)}
+              i={index % state.w}
+              j={Math.floor(index / state.w)}
             />
           ))}
         </ButtonContainer>

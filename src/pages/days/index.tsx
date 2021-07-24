@@ -78,7 +78,6 @@ export const dayData: DayInfo[] = [
     description: 'More like NOTograms',
     link: '/days/11',
     component: Day11,
-    hidden: true,
   },
 ];
 

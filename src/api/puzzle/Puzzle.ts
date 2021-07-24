@@ -1,5 +1,5 @@
 import countContinents from './countContinents';
-import type { GridFeature, PuzzleDetails, PuzzleState } from './types';
+import type { GridFeature, PuzzleDetails, PuzzleState, SizeLeft, SizeRight } from './types';
 import { EdgeClue, GridFeatureKind } from './types';
 
 function readFallback(value: number | undefined, fallback = -1) {
@@ -71,8 +71,21 @@ function checkNonos(line: boolean[], clusters: number[]) {
   return foundClusters.every((cluster, i) => cluster === clusters[i]);
 }
 
+function isSizeLeft(details: SizeLeft | SizeRight): details is SizeLeft {
+  return 'n' in details;
+}
+
+function getWidthHeight(details: SizeLeft | SizeRight) {
+  if (isSizeLeft(details)) {
+    return { w: details.n, h: details.n };
+  } else {
+    return { w: details.w, h: details.h };
+  }
+}
+
 export default class Puzzle {
-  readonly n: number;
+  readonly w: number;
+  readonly h: number;
 
   state: PuzzleState;
 
@@ -86,27 +99,29 @@ export default class Puzzle {
   readonly gridFeatures: Record<string, GridFeature>;
 
   constructor(details: PuzzleDetails) {
-    const n = details.n;
+    const { w, h } = getWidthHeight(details);
 
-    this.n = n;
+    this.w = w;
+    this.h = h;
 
     this.state = {
-      enabled: Array(n * n).fill(false),
+      enabled: Array(w * h).fill(false),
       complete: false,
-      n,
+      w,
+      h,
     };
 
-    this.colCounts = (details.colClues || Array(n).fill(null)).map(clueToCount);
-    this.rowCounts = (details.rowClues || Array(n).fill(null)).map(clueToCount);
+    this.colCounts = (details.colClues || Array(w).fill(null)).map(clueToCount);
+    this.rowCounts = (details.rowClues || Array(h).fill(null)).map(clueToCount);
 
-    this.colRules = (details.colClues || Array(n).fill(null)).map(clueToClue);
-    this.rowRules = (details.rowClues || Array(n).fill(null)).map(clueToClue);
+    this.colRules = (details.colClues || Array(w).fill(null)).map(clueToClue);
+    this.rowRules = (details.rowClues || Array(h).fill(null)).map(clueToClue);
 
-    if (this.colCounts.some(v => v < -1 || v > n)) {
-      throw new Error('Invalid requirement forsome column ' + JSON.stringify(this.colCounts));
+    if (this.colCounts.some(v => v < -1 || v > h)) {
+      throw new Error('Invalid requirement for some column ' + JSON.stringify(this.colCounts));
     }
-    if (this.rowCounts.some(v => v < -1 || v > n)) {
-      throw new Error('Invalid requirement forsome column ' + JSON.stringify(this.rowCounts));
+    if (this.rowCounts.some(v => v < -1 || v > w)) {
+      throw new Error('Invalid requirement for some column ' + JSON.stringify(this.rowCounts));
     }
 
     if (details.totalActive) {
@@ -116,11 +131,11 @@ export default class Puzzle {
       this.minTotal = details.minTotal;
     }
 
-    this.numContinents = readFallback(details.numContinents);
+    this.numContinents = details.numContinents ?? -1;
 
     this.gridFeatures = {};
     for (const feature of details.gridFeatures || []) {
-      const index = feature.i + feature.j * n;
+      const index = feature.i + feature.j * w;
 
       this.gridFeatures[index] = feature;
     }
@@ -156,7 +171,7 @@ export default class Puzzle {
   }
 
   isRowValid(state: PuzzleState, index: number) {
-    const line = state.enabled.slice(index * this.n, (index + 1) * this.n);
+    const line = state.enabled.slice(index * this.w, (index + 1) * this.w);
     // Lines are read from the right-hand-side for some rules, so we must reverse
     line.reverse();
 
@@ -164,7 +179,7 @@ export default class Puzzle {
   }
 
   isColValid(state: PuzzleState, index: number) {
-    const line = state.enabled.filter((_, subIndex) => subIndex % this.n === index);
+    const line = state.enabled.filter((_, subIndex) => subIndex % this.w === index);
 
     return this.isLineValid(line, this.colRules[index], this.colCounts[index]);
   }
@@ -174,7 +189,7 @@ export default class Puzzle {
   }
 
   getGridFeature(i: number, j: number): GridFeature | undefined {
-    const index = i + j * this.n;
+    const index = i + j * this.w;
 
     return this.gridFeatures[index];
   }
@@ -183,15 +198,15 @@ export default class Puzzle {
     let count = 0;
 
     for (let di = -1; di <= 1; di++) {
-      if (i + di < 0 || i + di >= this.n) {
+      if (i + di < 0 || i + di >= this.w) {
         continue;
       }
       for (let dj = -1; dj <= 1; dj++) {
-        if (j + dj < 0 || j + dj >= this.n) {
+        if (j + dj < 0 || j + dj >= this.h) {
           continue;
         }
 
-        if (state.enabled[i + di + this.n * (j + dj)]) {
+        if (state.enabled[i + di + this.w * (j + dj)]) {
           count++;
         }
       }
@@ -212,7 +227,7 @@ export default class Puzzle {
         return false;
       }
     } else if (feature.kind === GridFeatureKind.FORCED) {
-      if (state.enabled[i + this.n * j] !== !!feature.value) {
+      if (state.enabled[i + this.w * j] !== !!feature.value) {
         return false;
       }
     }
@@ -253,8 +268,10 @@ export default class Puzzle {
   isValid(state: PuzzleState): boolean {
     if (!this.isCountValid(state)) return false;
 
-    for (let i = 0; i < this.n; i++) {
+    for (let i = 0; i < this.h; i++) {
       if (!this.isRowValid(state, i)) return false;
+    }
+    for (let i = 0; i < this.w; i++) {
       if (!this.isColValid(state, i)) return false;
     }
 
@@ -282,17 +299,18 @@ export default class Puzzle {
   }
 
   read(i: number, j: number): boolean {
-    const index = i + j * this.n;
+    const index = i + j * this.w;
 
     return this.state.enabled[index];
   }
 
   toggle(i: number, j: number, status: boolean): PuzzleState {
-    const index = i + j * this.n;
+    const index = i + j * this.w;
     const newState = {
       enabled: this.state.enabled.slice(),
       complete: false,
-      n: this.n,
+      w: this.w,
+      h: this.h,
     };
     newState.enabled[index] = status;
     newState.complete = this.isValid(newState);
@@ -304,9 +322,10 @@ export default class Puzzle {
 
   reset(): PuzzleState {
     const newState = {
-      enabled: Array(this.n * this.n).fill(false),
+      enabled: Array(this.w * this.h).fill(false),
       complete: false,
-      n: this.n,
+      w: this.w,
+      h: this.h,
     };
     newState.complete = this.isValid(newState);
 

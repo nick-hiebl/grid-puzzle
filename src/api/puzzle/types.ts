@@ -1,5 +1,6 @@
 export interface PuzzleState {
-  n: number;
+  w: number;
+  h: number;
   complete: boolean;
   enabled: boolean[];
 }
@@ -21,8 +22,18 @@ export enum EdgeClue {
   NONO_3_2 = 'nonos/3-2',
 }
 
-export interface PuzzleDetails {
+export interface SizeLeft {
   n: number;
+}
+
+export interface SizeRight {
+  w: number;
+  h: number;
+}
+
+type Size = SizeLeft | SizeRight;
+
+interface PuzzleDetailsInner {
   colClues?: (number | EdgeClue | null)[];
   rowClues?: (number | EdgeClue | null)[];
   totalActive?: number;
@@ -31,6 +42,8 @@ export interface PuzzleDetails {
   numContinents?: number;
   gridFeatures?: GridFeature[];
 }
+
+export type PuzzleDetails = Size & PuzzleDetailsInner;
 
 export enum GridFeatureKind {
   NEARBY_COUNT = 'NEARBY_COUNT',
