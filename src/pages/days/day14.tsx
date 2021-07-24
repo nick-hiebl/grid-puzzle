@@ -47,7 +47,7 @@ const FINAL_PUZZLE = {
   n: 6,
   numContinents: 1,
   rowClues: [5,Ec.NONO_2_2,3,Ec.SQ_3,Ec.NONO_1_2,Ec.SQ_2],
-  colClues: [1,4,5,Ec.NONO_1_1,Ec.SQ_2,2],
+  colClues: [1,Ec.REFLECTIVE,5,Ec.NONO_1_1,Ec.SQ_2,2],
 };
 
 const TodaysPage = (props: DayProps) => {
