@@ -2,14 +2,6 @@ import countContinents from './countContinents';
 import type { GridFeature, PuzzleDetails, PuzzleState, SizeLeft, SizeRight } from './types';
 import { EdgeClue, GridFeatureKind } from './types';
 
-function readFallback(value: number | undefined, fallback = -1) {
-  if (value === undefined) {
-    return fallback;
-  }
-
-  return value;
-}
-
 function clueToCount(value: number | EdgeClue | null): number {
   if (typeof(value) == 'number') {
     return value;

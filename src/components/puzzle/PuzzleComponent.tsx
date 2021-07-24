@@ -47,13 +47,7 @@ const PuzzleStateContext = React.createContext<
 >([defaultPuzzle.getState(), { onToggle: () => {}, reset: () => {} }]);
 
 const usePuzzle = () => {
-  const x = useContext(PuzzleContext);
-
-  useEffect(() => {
-    console.warn('Re-rendering puzzle state');
-  }, [x]);
-
-  return x;
+  return useContext(PuzzleContext);
 }
 const usePuzzleState = () => useContext(PuzzleStateContext);
 
@@ -448,20 +442,41 @@ const columnFeatures = [
   PlaygroundFeatures.CONTINENTS,
 ];
 
+function usePlaygroundDetailsColumnNeeded() {
+  const { isPlayground, playgroundFeatures } = usePuzzle();
+
+  if (!isPlayground) {
+    return false;
+  }
+
+  if (playgroundFeatures?.length) {
+    if (columnFeatures.some(f => playgroundFeatures.includes(f))) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function usePlaygroundBorderNeeded() {
+  const columnNeeded = usePlaygroundDetailsColumnNeeded();
+  // Add other here if it becomes more complex
+
+  return columnNeeded;
+}
+
 const DetailsColumn = () => {
-  const { puzzle, isPlayground, playgroundFeatures, highlightErrors } = usePuzzle();
+  const { puzzle, playgroundFeatures, highlightErrors } = usePuzzle();
   const [state] = usePuzzleState();
 
   const anyDetails = puzzle.numContinents !== -1;
 
-  if (
-    isPlayground
-    && playgroundFeatures?.length
-    && columnFeatures.some(f => playgroundFeatures?.includes(f))
-  ) {
+  const enabledForPlayground = usePlaygroundDetailsColumnNeeded();
+
+  if (enabledForPlayground) {
     return (
       <div style={columnStyles}>
-        {playgroundFeatures.includes(PlaygroundFeatures.CONTINENTS) && (
+        {playgroundFeatures?.includes(PlaygroundFeatures.CONTINENTS) && (
           <Clue
             image={image('counts/continent.png')}
             alt="Number of continents"
@@ -543,8 +558,10 @@ const EdgeWrapper = (props: { children: React.ReactElement }) => {
 
   const anyEdgeRules = puzzle.colRules.some(v => !!v)
     || puzzle.rowRules.some(v => !!v);
+
+  const pgBorderNeeded = usePlaygroundBorderNeeded();
   
-  if (!anyEdgeClues && !anyEdgeRules && !puzzle.totalRequirement() && !playgroundFeatures?.some(f => !isGridFeature(f))) {
+  if (!anyEdgeClues && !anyEdgeRules && !puzzle.totalRequirement() && !pgBorderNeeded) {
     return children;
   }
 
