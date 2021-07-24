@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/grid-puzzle/static/css/main.235ead0e.chunk.css",
-    "main.js": "/grid-puzzle/static/js/main.285e9326.chunk.js",
-    "main.js.map": "/grid-puzzle/static/js/main.285e9326.chunk.js.map",
+    "main.js": "/grid-puzzle/static/js/main.8c13b512.chunk.js",
+    "main.js.map": "/grid-puzzle/static/js/main.8c13b512.chunk.js.map",
     "runtime-main.js": "/grid-puzzle/static/js/runtime-main.3172a17d.js",
     "runtime-main.js.map": "/grid-puzzle/static/js/runtime-main.3172a17d.js.map",
-    "static/js/2.60e5a9eb.chunk.js": "/grid-puzzle/static/js/2.60e5a9eb.chunk.js",
-    "static/js/2.60e5a9eb.chunk.js.map": "/grid-puzzle/static/js/2.60e5a9eb.chunk.js.map",
+    "static/js/2.b72f24f3.chunk.js": "/grid-puzzle/static/js/2.b72f24f3.chunk.js",
+    "static/js/2.b72f24f3.chunk.js.map": "/grid-puzzle/static/js/2.b72f24f3.chunk.js.map",
     "static/js/3.182b3a9b.chunk.js": "/grid-puzzle/static/js/3.182b3a9b.chunk.js",
     "static/js/3.182b3a9b.chunk.js.map": "/grid-puzzle/static/js/3.182b3a9b.chunk.js.map",
     "index.html": "/grid-puzzle/index.html",
     "static/css/main.235ead0e.chunk.css.map": "/grid-puzzle/static/css/main.235ead0e.chunk.css.map",
-    "static/js/2.60e5a9eb.chunk.js.LICENSE.txt": "/grid-puzzle/static/js/2.60e5a9eb.chunk.js.LICENSE.txt"
+    "static/js/2.b72f24f3.chunk.js.LICENSE.txt": "/grid-puzzle/static/js/2.b72f24f3.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.3172a17d.js",
-    "static/js/2.60e5a9eb.chunk.js",
+    "static/js/2.b72f24f3.chunk.js",
     "static/css/main.235ead0e.chunk.css",
-    "static/js/main.285e9326.chunk.js"
+    "static/js/main.8c13b512.chunk.js"
   ]
 }
