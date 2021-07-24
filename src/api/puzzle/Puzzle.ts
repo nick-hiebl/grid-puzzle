@@ -186,6 +186,8 @@ export default class Puzzle {
       if (countGaps(line) !== 2) return false;
     } else if (rule === EdgeClue.SQ_3) {
       if (countGaps(line) !== 3) return false;
+    } else if (rule === EdgeClue.REFLECTIVE) {
+      if (!isLineSymmetric(line)) return false;
     } else if (rule?.startsWith('nonos/')) {
       const spacing = rule.slice(6).split('-').map(x => parseInt(x, 10));
       if (!checkNonos(line, spacing)) {

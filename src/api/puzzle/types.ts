@@ -8,6 +8,7 @@ export interface PuzzleState {
 export enum EdgeClue {
   NO_TRIPLES = 'NO_TRIPLES',
   YES_TRIPLES = 'YES_TRIPLES',
+  REFLECTIVE = 'REFLECTIVE',
   SQ_1 = '1_SQUARE',
   SQ_2 = '2_SQUARE',
   SQ_3 = '3_SQUARE',
