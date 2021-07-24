@@ -1,6 +1,12 @@
 import countContinents from './countContinents';
-import type { GridFeature, PuzzleDetails, PuzzleState, SizeLeft, SizeRight } from './types';
-import { EdgeClue, GridFeatureKind } from './types';
+import type {
+  GridFeature,
+  PuzzleDetails,
+  PuzzleState,
+  SizeLeft,
+  SizeRight,
+} from './types';
+import { EdgeClue, GlobalFeature, GridFeatureKind } from './types';
 
 function clueToCount(value: number | EdgeClue | null): number {
   if (typeof(value) == 'number') {
@@ -63,6 +69,10 @@ function checkNonos(line: boolean[], clusters: number[]) {
   return foundClusters.every((cluster, i) => cluster === clusters[i]);
 }
 
+function isLineSymmetric(line: boolean[]) {
+  return line.every((value, index) => value === line[line.length - index - 1]);
+}
+
 function isSizeLeft(details: SizeLeft | SizeRight): details is SizeLeft {
   return 'n' in details;
 }
@@ -73,6 +83,30 @@ function getWidthHeight(details: SizeLeft | SizeRight) {
   } else {
     return { w: details.w, h: details.h };
   }
+}
+
+function allRows(state: PuzzleState) {
+  const rows = [];
+  for (let i = 0; i < state.h; i++) {
+    const line = state.enabled.slice(i * state.w, (i + 1) * state.w);
+    // Lines are read from the right-hand-side for some rules, so we must reverse
+    line.reverse();
+
+    rows.push(line);
+  }
+
+  return rows;
+}
+
+function allColumns(state: PuzzleState) {
+  const cols = [];
+  for (let i = 0; i < state.w; i++) {
+    const line = state.enabled.filter((_, subIndex) => subIndex % state.w === i);
+
+    cols.push(line);
+  }
+
+  return cols;
 }
 
 export default class Puzzle {
@@ -89,6 +123,8 @@ export default class Puzzle {
   private readonly maxTotal: number | undefined;
   readonly numContinents: number;
   readonly gridFeatures: Record<string, GridFeature>;
+
+  readonly globalFeatures: GlobalFeature[];
 
   constructor(details: PuzzleDetails) {
     const { w, h } = getWidthHeight(details);
@@ -131,6 +167,8 @@ export default class Puzzle {
 
       this.gridFeatures[index] = feature;
     }
+
+    this.globalFeatures = details.globalFeatures ?? [];
   }
 
   isLineValid(line: boolean[], rule: EdgeClue | null, count: number): boolean {
@@ -178,6 +216,26 @@ export default class Puzzle {
 
   static countContinents(state: PuzzleState) {
     return countContinents(state);
+  }
+
+  isSymmetryCorrect(state: PuzzleState) {
+    if (this.globalFeatures.includes(GlobalFeature.FLIP_HORIZONTAL)) {
+      const allRowsValid = allRows(state).every(row => isLineSymmetric(row));
+
+      if (!allRowsValid) {
+        return false;
+      }
+    }
+
+    if (this.globalFeatures.includes(GlobalFeature.FLIP_VERTICAL)) {
+      const allColsValid = allColumns(state).every(col => isLineSymmetric(col));
+
+      if (!allColsValid) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   getGridFeature(i: number, j: number): GridFeature | undefined {
@@ -260,11 +318,18 @@ export default class Puzzle {
   isValid(state: PuzzleState): boolean {
     if (!this.isCountValid(state)) return false;
 
-    for (let i = 0; i < this.h; i++) {
-      if (!this.isRowValid(state, i)) return false;
+    const someRowWrong = allRows(state).some((row, i) => {
+      return !this.isLineValid(row, this.rowRules[i], this.rowCounts[i]);
+    });
+    if (someRowWrong) {
+      return false;
     }
-    for (let i = 0; i < this.w; i++) {
-      if (!this.isColValid(state, i)) return false;
+
+    const someColumnWrong = allColumns(state).some((col, i) => {
+      return !this.isLineValid(col, this.colRules[i], this.colCounts[i]);
+    });
+    if (someColumnWrong) {
+      return false;
     }
 
     if (this.numContinents !== -1) {
@@ -281,6 +346,10 @@ export default class Puzzle {
       if (!this.gridFeatureValid(feature.i, feature.j, state)) {
         return false;
       }
+    }
+
+    if (!this.isSymmetryCorrect(state)) {
+      return false;
     }
 
     return true;

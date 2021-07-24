@@ -9,6 +9,8 @@ import Day8 from './day8';
 import Day9 from './day9';
 import Day10 from './day10';
 import Day11 from './day11';
+import Day12 from './day12';
+import Day13 from './day13';
 
 import type { DayInfo } from './types';
 
@@ -78,6 +80,20 @@ export const dayData: DayInfo[] = [
     description: 'More like NOTograms',
     link: '/days/11',
     component: Day11,
+  },
+  {
+    title: 'Day 12: Aspect ratio',
+    description: 'Who needs squares anyway?',
+    link: '/days/12',
+    component: Day12,
+    hidden: true,
+  },
+  {
+    title: 'Day 13: Looking in the mirror',
+    description: 'Time to think',
+    link: '/days/13',
+    component: Day13,
+    hidden: true,
   },
 ];
 

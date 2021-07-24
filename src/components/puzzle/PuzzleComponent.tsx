@@ -10,7 +10,7 @@ import React, {
 import Puzzle from '../../api/puzzle';
 import type { PuzzleDetails, PuzzleState } from '../../api/puzzle';
 import { EdgeClue } from '../../api/puzzle';
-import { GridFeature, GridFeatureKind } from '../../api/puzzle/types';
+import { GlobalFeature, GridFeature, GridFeatureKind } from '../../api/puzzle/types';
 
 const TO_BLACK = 'brightness(0) saturate(100%)';
 const GREEN_TO_BLUE = 'brightness(0) saturate(100%) invert(41%) sepia(48%) saturate(4528%) hue-rotate(200deg) brightness(99%) contrast(105%)';
@@ -260,64 +260,59 @@ const clueStyle: CSSProperties = {
   textAlign: 'center',
 };
 
-const RULE_DETAILS: Record<EdgeClue, { image: string; alt: string }> = {
-  [EdgeClue.NO_TRIPLES]: {
-    image: image('counts/circle-circle-cross.png'),
-    alt: 'Circle circle cross',
-  },
-  [EdgeClue.YES_TRIPLES]: {
-    image: image('counts/cross-ccc.png'),
-    alt: 'NOT circle circle cross',
-  },
-  [EdgeClue.SQ_1]: {
-    image: image('counts/square-1.png'),
-    alt: 'One square',
-  },
-  [EdgeClue.SQ_2]: {
-    image: image('counts/square-2.png'),
-    alt: 'Two squares',
-  },
-  [EdgeClue.SQ_3]: {
-    image: image('counts/square-3.png'),
-    alt: 'Three squares',
-  },
-  [EdgeClue.NONO_1_1]: {
-    image: image('counts/nonos/1-1.png'),
-    alt: '1 1',
-  },
-  [EdgeClue.NONO_1_1_1]: {
-    image: image('counts/nonos/1-1-1.png'),
-    alt: '1 1 1',
-  },
-  [EdgeClue.NONO_1_2]: {
-    image: image('counts/nonos/1-2.png'),
-    alt: '1 2',
-  },
-  [EdgeClue.NONO_1_3]: {
-    image: image('counts/nonos/1-3.png'),
-    alt: '1 3',
-  },
-  [EdgeClue.NONO_2_1]: {
-    image: image('counts/nonos/2-1.png'),
-    alt: '2 1',
-  },
-  [EdgeClue.NONO_2_2]: {
-    image: image('counts/nonos/2-2.png'),
-    alt: '2 2',
-  },
-  [EdgeClue.NONO_2_3]: {
-    image: image('counts/nonos/2-3.png'),
-    alt: '2 3',
-  },
-  [EdgeClue.NONO_3_1]: {
-    image: image('counts/nonos/3-1.png'),
-    alt: '3 1',
-  },
-  [EdgeClue.NONO_3_2]: {
-    image: image('counts/nonos/3-2.png'),
-    alt: '3 2',
-  },
-};
+const NONO_RULE_LIST = [
+  EdgeClue.NONO_1_1, 
+  EdgeClue.NONO_1_1_1, 
+  EdgeClue.NONO_1_2, 
+  EdgeClue.NONO_1_3, 
+  EdgeClue.NONO_2_1, 
+  EdgeClue.NONO_2_2, 
+  EdgeClue.NONO_2_3, 
+  EdgeClue.NONO_3_1, 
+  EdgeClue.NONO_3_2,
+  EdgeClue.NONO_1_1_2,
+  EdgeClue.NONO_1_2_1,
+  EdgeClue.NONO_2_1_1,
+  EdgeClue.NONO_1_4,
+  EdgeClue.NONO_4_1,
+];
+
+function allRuleDetails(): Record<EdgeClue, { image: string; alt: string }> {
+  const someRules: Partial<Record<EdgeClue, { image: string; alt: string }>> = {
+    [EdgeClue.NO_TRIPLES]: {
+      image: image('counts/circle-circle-cross.png'),
+      alt: 'Circle circle cross',
+    },
+    [EdgeClue.YES_TRIPLES]: {
+      image: image('counts/cross-ccc.png'),
+      alt: 'NOT circle circle cross',
+    },
+    [EdgeClue.SQ_1]: {
+      image: image('counts/square-1.png'),
+      alt: 'One square',
+    },
+    [EdgeClue.SQ_2]: {
+      image: image('counts/square-2.png'),
+      alt: 'Two squares',
+    },
+    [EdgeClue.SQ_3]: {
+      image: image('counts/square-3.png'),
+      alt: 'Three squares',
+    },
+  };
+
+  for (const nonoRule of NONO_RULE_LIST) {
+    const [, nums] = nonoRule.split('/');
+    someRules[nonoRule] = {
+      image: image(`counts/${nonoRule}.png`),
+      alt: nums.split('-').join(' '),
+    };
+  }
+
+  return someRules as Record<EdgeClue, { image: string; alt: string }>;
+}
+
+const RULE_DETAILS = allRuleDetails();
 
 const useEdgeClueHighlight = (horizontal: boolean, index: number): boolean => {
   const { puzzle, highlightErrors } = usePuzzle();
@@ -402,15 +397,19 @@ const Clue = (props: ClueProps) => {
 
   if (image && text) {
     return (
-      <div style={{
-        ...coreStyle,
-        ...clueStyle,
-        backgroundImage: `url(${image})`,
-        backgroundSize: 'cover',
-        fontSize: '2em',
-        fontWeight: 900,
-      }}>
-        {text}
+      <div style={clueStyle}>
+        <div style={{
+          ...coreStyle,
+          backgroundImage: `url(${image})`,
+          backgroundSize: 'cover',
+          fontSize: '2em',
+          fontWeight: 900,
+          display: 'table',
+        }}>
+          <span style={{ display: 'table-cell', verticalAlign: 'middle' }}>
+            {text}
+          </span>
+        </div>
       </div>
     );
   }
@@ -436,6 +435,7 @@ const columnStyles: CSSProperties = {
   display: 'flex',
   alignItems: 'space-evenly',
   justifyContent: 'center',
+  flexDirection: 'column',
 };
 
 const columnFeatures = [
@@ -465,8 +465,72 @@ function usePlaygroundBorderNeeded() {
   return columnNeeded;
 }
 
+const ContinentCount = () => {
+  const { puzzle, highlightErrors } = usePuzzle();
+  const [state] = usePuzzleState();
+
+  if (puzzle.numContinents <= 0) {
+    return null;
+  }
+
+  const shouldHighlight = highlightErrors
+    // Continent count matters
+    && puzzle.numContinents !== -1
+    // Continent count is wrong
+    && Puzzle.countContinents(state) !== puzzle.numContinents;
+
+  return (
+    <Clue
+      image={image('counts/continent.png')}
+      alt="Number of continents"
+      text={puzzle.numContinents.toString()}
+      width="60px"
+      filter={shouldHighlight ? GREEN_TO_RED : undefined}
+    />
+  );
+};
+
+const Symmetry = () => {
+  const { puzzle, highlightErrors } = usePuzzle();
+  const [state] = usePuzzleState();
+
+  const hSymmetry = puzzle.globalFeatures.includes(GlobalFeature.FLIP_HORIZONTAL);
+  const vSymmetry = puzzle.globalFeatures.includes(GlobalFeature.FLIP_VERTICAL);
+
+  const valid = puzzle.isSymmetryCorrect(state);
+
+  const shouldHighlight = highlightErrors && !valid;
+
+  const imageSrc = hSymmetry && vSymmetry
+    ? image('counts/flip-both.png')
+    : image('counts/flip-vertical.png');
+
+  if (hSymmetry && vSymmetry) {
+    return (
+      <Clue
+        image={imageSrc}
+        alt="Horizonal and vertical mirror"
+        width="60px"
+        filter={shouldHighlight ? GREEN_TO_RED : undefined}
+      />
+    );
+  } else if (hSymmetry || vSymmetry) {
+    return (
+      <Clue
+        image={imageSrc}
+        horizontal={hSymmetry}
+        alt={hSymmetry ? 'Horizontal mirror' : 'Vertical mirror'}
+        width="60px"
+        filter={shouldHighlight ? GREEN_TO_RED : undefined}
+      />
+    );
+  }
+
+  return null;
+};
+
 const DetailsColumn = () => {
-  const { puzzle, playgroundFeatures, highlightErrors } = usePuzzle();
+  const { puzzle, playgroundFeatures } = usePuzzle();
   const [state] = usePuzzleState();
 
   const anyDetails = puzzle.numContinents !== -1;
@@ -490,27 +554,14 @@ const DetailsColumn = () => {
     );
   }
 
-  if (!anyDetails) {
+  if (!anyDetails && !puzzle.globalFeatures.length) {
     return null;
   }
 
-  const shouldHighlight = highlightErrors
-    // Continent count matters
-    && puzzle.numContinents !== -1
-    // Continent count is wrong
-    && Puzzle.countContinents(state) !== puzzle.numContinents;
-
   return (
-    <div style={columnStyles}>
-      {puzzle.numContinents !== -1 && (
-        <Clue
-          image={image('counts/continent.png')}
-          alt="Number of continents"
-          text={puzzle.numContinents.toString()}
-          width="60px"
-          filter={shouldHighlight ? GREEN_TO_RED : undefined}
-        />
-      )}
+    <div style={columnStyles} className="details-column">
+      <ContinentCount />
+      <Symmetry />
     </div>
   )
 };
@@ -543,15 +594,15 @@ const ActiveCount = () => {
 
 const edgeStyle = (w: number, h: number): CSSProperties => ({
   display: 'inline-grid',
-  gridTemplateRows: `45px ${h * 100 + 8}px`,
+  gridTemplateRows: `auto ${h * 100 + 8}px`,
   gridTemplateColumns: `auto ${w * 100 + 8}px auto`,
-  gridTemplateAreas: '"extra-details top-clues total-count" "extra-details main-section side-clues"',
+  gridTemplateAreas: '"0 top-clues total-count" "extra-details main-section side-clues"',
 });
 
 const EdgeWrapper = (props: { children: React.ReactElement }) => {
   const { children } = props;
 
-  const { puzzle, playgroundFeatures } = usePuzzle();
+  const { puzzle } = usePuzzle();
 
   const anyEdgeClues = puzzle.colCounts.some(v => v >= 0)
     || puzzle.rowCounts.some(v => v >= 0);

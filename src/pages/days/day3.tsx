@@ -38,6 +38,11 @@ const TodaysPage = (props: DayProps) => {
         square is definitely not active while working out the puzzle.
       </p>
 
+      <p>
+        <strong>Note:</strong> stuff on the left doesn't correspond to any
+        particular row.
+      </p>
+
       <Typography variant="h4">Intro Puzzle #1</Typography>
       <PuzzleWrapper details={PUZZLE_0} highlightErrors />
       <br />

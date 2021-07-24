@@ -20,6 +20,11 @@ export enum EdgeClue {
   NONO_2_3 = 'nonos/2-3',
   NONO_3_1 = 'nonos/3-1',
   NONO_3_2 = 'nonos/3-2',
+  NONO_1_1_2 = 'nonos/1-1-2',
+  NONO_1_2_1 = 'nonos/1-2-1',
+  NONO_2_1_1 = 'nonos/2-1-1',
+  NONO_1_4 = 'nonos/1-4',
+  NONO_4_1 = 'nonos/4-1',
 }
 
 export interface SizeLeft {
@@ -41,6 +46,7 @@ interface PuzzleDetailsInner {
   maxTotal?: number;
   numContinents?: number;
   gridFeatures?: GridFeature[];
+  globalFeatures?: GlobalFeature[];
 }
 
 export type PuzzleDetails = Size & PuzzleDetailsInner;
@@ -55,4 +61,9 @@ export interface GridFeature {
   i: number;
   j: number;
   value: number;
+}
+
+export enum GlobalFeature {
+  FLIP_HORIZONTAL = 'flipHorizontal',
+  FLIP_VERTICAL = 'flipVertical',
 }
