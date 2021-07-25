@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/grid-puzzle/static/css/main.235ead0e.chunk.css",
-    "main.js": "/grid-puzzle/static/js/main.0856f4ec.chunk.js",
-    "main.js.map": "/grid-puzzle/static/js/main.0856f4ec.chunk.js.map",
+    "main.js": "/grid-puzzle/static/js/main.22de2d67.chunk.js",
+    "main.js.map": "/grid-puzzle/static/js/main.22de2d67.chunk.js.map",
     "runtime-main.js": "/grid-puzzle/static/js/runtime-main.3172a17d.js",
     "runtime-main.js.map": "/grid-puzzle/static/js/runtime-main.3172a17d.js.map",
     "static/js/2.cd1febf6.chunk.js": "/grid-puzzle/static/js/2.cd1febf6.chunk.js",
@@ -17,6 +17,6 @@
     "static/js/runtime-main.3172a17d.js",
     "static/js/2.cd1febf6.chunk.js",
     "static/css/main.235ead0e.chunk.css",
-    "static/js/main.0856f4ec.chunk.js"
+    "static/js/main.22de2d67.chunk.js"
   ]
 }
