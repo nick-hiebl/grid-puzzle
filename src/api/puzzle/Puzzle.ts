@@ -172,6 +172,8 @@ export default class Puzzle {
   }
 
   isLineValid(line: boolean[], rule: EdgeClue | null, count: number): boolean {
+    const sum = line.reduce((a, b) => a + (+b), 0);
+
     if (rule === EdgeClue.NO_TRIPLES) {
       if (hasTriples(line)) {
         return false;
@@ -188,6 +190,10 @@ export default class Puzzle {
       if (countGaps(line) !== 3) return false;
     } else if (rule === EdgeClue.REFLECTIVE) {
       if (!isLineSymmetric(line)) return false;
+    } else if (rule === EdgeClue.DIV_A_YES) {
+      if (sum % 2) return false;
+    } else if (rule === EdgeClue.DIV_A_NO) {
+      if (!(sum % 2)) return false;
     } else if (rule?.startsWith('nonos/')) {
       const spacing = rule.slice(6).split('-').map(x => parseInt(x, 10));
       if (!checkNonos(line, spacing)) {
@@ -196,8 +202,6 @@ export default class Puzzle {
     }
 
     if (count === -1) return true;
-
-    const sum = line.reduce((a, b) => a + (+b), 0);
 
     return sum === count;
   }

@@ -9,6 +9,8 @@ export enum EdgeClue {
   NO_TRIPLES = 'NO_TRIPLES',
   YES_TRIPLES = 'YES_TRIPLES',
   REFLECTIVE = 'REFLECTIVE',
+  DIV_A_YES = 'div-a-yes',
+  DIV_A_NO = 'div-a-no',
   SQ_1 = '1_SQUARE',
   SQ_2 = '2_SQUARE',
   SQ_3 = '3_SQUARE',

@@ -41,13 +41,7 @@ const PUZZLE_4 = {
   colClues: [0,Ec.REFLECTIVE,null,2,Ec.SQ_1,Ec.YES_TRIPLES,3],
   globalFeatures,
 };
-const PUZZLE_5 = {
-  w: 7,
-  h: 5,
-  numContinents: 1,
-  rowClues: [Ec.REFLECTIVE,Ec.NONO_1_2,6,Ec.REFLECTIVE,6],
-  colClues: [Ec.SQ_2,4,Ec.NONO_1_1_1,4,Ec.SQ_1,Ec.SQ_2,3],
-};
+
 const FINAL_PUZZLE_1 = {
   w: 8,
   h: 6,
@@ -94,10 +88,6 @@ const TodaysPage = (props: DayProps) => {
 
       <Typography variant="h4">Puzzle #4</Typography>
       <PuzzleWrapper details={PUZZLE_4} highlightErrors />
-      <br />
-
-      <Typography variant="h4">Puzzle #5</Typography>
-      <PuzzleWrapper details={PUZZLE_5} highlightErrors />
       <br />
 
       <Typography variant="h4">Final Puzzle #1</Typography>

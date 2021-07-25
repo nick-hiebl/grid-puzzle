@@ -303,6 +303,14 @@ function allRuleDetails(): Record<EdgeClue, { image: string; alt: string }> {
       image: image('counts/flip-vertical.png'),
       alt: 'Reflective',
     },
+    [EdgeClue.DIV_A_YES]: {
+      image: image('counts/16-a.png'),
+      alt: 'Two triangles',
+    },
+    [EdgeClue.DIV_A_NO]: {
+      image: image('counts/16-b.png'),
+      alt: 'Not two triangles',
+    },
   };
 
   for (const nonoRule of NONO_RULE_LIST) {
