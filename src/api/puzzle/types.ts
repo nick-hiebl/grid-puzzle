@@ -67,4 +67,5 @@ export interface GridFeature {
 export enum GlobalFeature {
   FLIP_HORIZONTAL = 'flipHorizontal',
   FLIP_VERTICAL = 'flipVertical',
+  STACKED = 'stacked',
 }

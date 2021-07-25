@@ -340,7 +340,7 @@ const EdgeClueComponent = (props: { count: number; rule?: EdgeClue | null; horiz
 
   const filter = shouldHighlight ? GREEN_TO_RED : undefined;
 
-  if (count > 6) {
+  if (count > 8) {
     return (
       <Clue text={count.toString()} horizontal={horizontal} filter={filter} />
     );
@@ -533,6 +533,28 @@ const Symmetry = () => {
   return null;
 };
 
+const Stacked = () => {
+  const { puzzle, highlightErrors } = usePuzzle();
+  const [state] = usePuzzleState();
+
+  if (!puzzle.globalFeatures.includes(GlobalFeature.STACKED)) {
+    return null;
+  }
+
+  const valid = puzzle.isStackedCorrectly(state);
+
+  const shouldHighlight = highlightErrors && !valid;
+
+  return (
+    <Clue
+      image={image('counts/stacked.png')}
+      alt="Stacked"
+      width="60px"
+      filter={shouldHighlight ? GREEN_TO_RED : undefined}
+    />
+  );
+};
+
 const DetailsColumn = () => {
   const { puzzle, playgroundFeatures } = usePuzzle();
   const [state] = usePuzzleState();
@@ -566,6 +588,7 @@ const DetailsColumn = () => {
     <div style={columnStyles} className="details-column">
       <ContinentCount />
       <Symmetry />
+      <Stacked />
     </div>
   )
 };

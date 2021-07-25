@@ -240,6 +240,25 @@ export default class Puzzle {
     return true;
   }
 
+  isStackedCorrectly(state: PuzzleState) {
+    if (!this.globalFeatures.includes(GlobalFeature.STACKED)) {
+      return true;
+    }
+
+    for (const col of allColumns(state)) {
+      let isSolid = false;
+      for (const digit of col) {
+        if (isSolid && !digit) {
+          return false;
+        } else if (digit) {
+          isSolid = true;
+        }
+      }
+    }
+
+    return true;
+  }
+
   getGridFeature(i: number, j: number): GridFeature | undefined {
     const index = i + j * this.w;
 
@@ -351,6 +370,10 @@ export default class Puzzle {
     }
 
     if (!this.isSymmetryCorrect(state)) {
+      return false;
+    }
+
+    if (!this.isStackedCorrectly(state)) {
       return false;
     }
 
