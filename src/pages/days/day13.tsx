@@ -65,7 +65,7 @@ const TodaysPage = (props: DayProps) => {
       </p>
 
       <p>
-        Hopefully that's enough hints, and hopefully the feature speaks for
+        Hopefully that's enough hints, and hopefully the icon speaks for
         itself anyway.
       </p>
 
@@ -80,7 +80,7 @@ const TodaysPage = (props: DayProps) => {
 
       <Typography variant="h4">Puzzle #1</Typography>
       <p>
-        Time for some proper puzzles.
+        Time for some fancier puzzles.
       </p>
       <PuzzleWrapper details={PUZZLE_1} highlightErrors />
       <br />

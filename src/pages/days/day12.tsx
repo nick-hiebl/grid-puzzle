@@ -69,7 +69,7 @@ const TodaysPage = (props: DayProps) => {
       </p>
 
       <p>
-        I suspect that these puzzles will not require any clever explaining.
+        I hope that today's new feature will not require any clever explaining.
       </p>
 
       <Typography variant="h4">Intro Puzzle</Typography>

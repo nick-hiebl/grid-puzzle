@@ -8,8 +8,8 @@ import { EdgeClue as Ec } from '../../api/puzzle/types';
 
 const PUZZLE_0 = {
   n: 5,
-  colClues: [null,null,null,null,null],
-  rowClues: [Ec.NONO_1_2,Ec.NONO_1_1,Ec.NONO_2_1,Ec.NONO_1_1_1,Ec.NONO_1_3],
+  colClues: [Ec.NONO_1_2,Ec.NONO_1_1,Ec.NONO_2_1,Ec.NONO_1_1_1,Ec.NONO_1_3],
+  rowClues: [null,null,null,null,null],
 };
 const PUZZLE_1 = {
   n: 4,
