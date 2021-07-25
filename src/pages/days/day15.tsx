@@ -67,15 +67,10 @@ const TodaysPage = (props: DayProps) => {
   return (
     <Container>
       {props.links}
-      <Typography variant="h3">Day 14: Narrower mirrors</Typography>
+      <Typography variant="h3">Day 15: Piling up</Typography>
 
       <p>
-        Similar idea to yesterday.
-      </p>
-
-      <p>
-        <strong>Note:</strong> stuff on the top and right actually
-        {' '}<strong>does</strong> correspond to a particular column or row.
+        No explanation for today's mechanic. Hopefully it's inferrable.
       </p>
 
       <Typography variant="h4">Intro Puzzle</Typography>
