@@ -14,6 +14,7 @@ import Day13 from './day13';
 import Day14 from './day14';
 import Day15 from './day15';
 import Day16 from './day16';
+import Day17 from './day17';
 
 import type { DayInfo } from './types';
 
@@ -101,7 +102,6 @@ export const dayData: DayInfo[] = [
     description: 'Exploring the options',
     link: '/days/14',
     component: Day14,
-    hidden: true,
   },
   {
     title: 'Day 15: Piling up',
@@ -116,7 +116,14 @@ export const dayData: DayInfo[] = [
     link: '/days/16',
     component: Day16,
     hidden: true,
-  }
+  },
+  {
+    title: 'Day 17: Well this is odd',
+    description: 'More and more puzzles',
+    link: '/days/17',
+    component: Day17,
+    hidden: true,
+  },
 ];
 
 if (window.location.host.includes('127')) {
