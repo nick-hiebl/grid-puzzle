@@ -245,19 +245,56 @@ export default class Puzzle {
   }
 
   isStackedCorrectly(state: PuzzleState) {
-    if (!this.globalFeatures.includes(GlobalFeature.STACKED)) {
-      return true;
-    }
-
-    for (const col of allColumns(state)) {
-      let isSolid = false;
-      for (const digit of col) {
-        if (isSolid && !digit) {
-          return false;
-        } else if (digit) {
-          isSolid = true;
+    // Simple stacking
+    if (this.globalFeatures.includes(GlobalFeature.STACKED)) {
+      for (const col of allColumns(state)) {
+        let isSolid = false;
+        for (const digit of col) {
+          if (isSolid && !digit) {
+            return false;
+          } else if (digit) {
+            isSolid = true;
+          }
         }
       }
+    }
+    // Over-under stacking
+    else if (this.globalFeatures.includes(GlobalFeature.STACKED_OU)) {
+      let middles: number[] = [];
+      for (const col of allColumns(state)) {
+        const start = col.indexOf(true);
+
+        if (start === -1) continue;
+
+        const post = col.slice(start).indexOf(false);
+        const end = post === -1 ? this.h : start + post;
+
+        // If multiple sections, then bail
+        if (col.slice(end).some(v => v)) return false;
+
+        if (!middles.length) {
+          middles = [start, end];
+          continue;
+        }
+        const hasStart = middles.includes(start),
+          hasEnd = middles.includes(end);
+
+        if (!hasStart && !hasEnd) {
+          // Our endpoints don't match
+          return false;
+        } else if (hasStart && hasEnd) {
+          // Not able to narrow down which is correct
+          continue;
+        } else if (hasStart) {
+          middles = [start];
+          continue;
+        } else if (hasEnd) {
+          middles = [end];
+          continue;
+        }
+      }
+
+      return true;
     }
 
     return true;

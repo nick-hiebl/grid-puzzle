@@ -5,6 +5,7 @@ import { PuzzleWrapper } from '../../components/puzzle/PuzzleComponent';
 
 import type { DayProps } from './types';
 import { EdgeClue as Ec, GlobalFeature } from '../../api/puzzle/types';
+import { DayLink } from './utils';
 
 const globalFeatures = [GlobalFeature.STACKED];
 
@@ -65,6 +66,13 @@ const TodaysPage = (props: DayProps) => {
 
       <p>
         No explanation for today's mechanic. Hopefully it's inferrable.
+      </p>
+
+      <p>
+        <strong>Note:</strong> For those who have been following along in real
+        time, the art for "nonogram clues" has been updated. It's not too
+        different, so you may be able to figure out how it works yourself, but
+        if you'd like to see the new explanation visit: <DayLink index={10} />
       </p>
 
       <Typography variant="h4">Intro Puzzle</Typography>

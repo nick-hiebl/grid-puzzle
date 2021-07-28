@@ -50,15 +50,15 @@ const TodaysPage = (props: DayProps) => {
 
       <p>
         Today's mechanic is inspired by a puzzle called a "nonogram" or
-        "picross". The way this puzzle works is that each row/column is broken
-        up into separate clumps of active squares.
+        "picross".
       </p>
 
       <p>
-        I'll need to explain how my "funky" art works. Each row is made up of
-        separate squares. Each row represents a "clump" of active squares, with
-        the number of squares in that row representing the number of active
-        squares in that clump.
+        I'll need to explain how my "funky" art works. The image is made up of
+        "groups" of square separated by solid lines. Each of these groups
+        corresponds to a section in that row/column of <i>consecutive</i>{' '}
+        active squares. These groups must then be broken up by at least one
+        empty space.
       </p>
 
       <Typography variant="h4">Intro Puzzle</Typography>

@@ -26,6 +26,9 @@ export enum EdgeClue {
   NONO_1_1_2 = 'nonos/1-1-2',
   NONO_1_2_1 = 'nonos/1-2-1',
   NONO_2_1_1 = 'nonos/2-1-1',
+  NONO_1_2_2 = 'nonos/1-2-2',
+  NONO_2_1_2 = 'nonos/2-1-2',
+  NONO_2_2_1 = 'nonos/2-2-1',
   NONO_1_4 = 'nonos/1-4',
   NONO_4_1 = 'nonos/4-1',
 }
@@ -70,4 +73,5 @@ export enum GlobalFeature {
   FLIP_HORIZONTAL = 'flipHorizontal',
   FLIP_VERTICAL = 'flipVertical',
   STACKED = 'stacked',
+  STACKED_OU = 'stacked-ou', // Stacked over and under
 }
