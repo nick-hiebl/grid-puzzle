@@ -20,12 +20,6 @@ const PUZZLE_0A = {
 const PUZZLE_0B = {
   w: 5,
   h: 3,
-  rowClues: [2,5,0],
-  ...common,
-};
-const PUZZLE_0C = {
-  w: 5,
-  h: 3,
   colClues: [Ec.SQ_2,Ec.SQ_2,2,Ec.SQ_2,1],
   rowClues: [null,4,1],
   ...common,
@@ -89,10 +83,6 @@ const TodaysPage = (props: DayProps) => {
 
       <Typography variant="h4">Intro Puzzle #2</Typography>
       <PuzzleWrapper details={PUZZLE_0B} highlightErrors />
-      <br />
-
-      <Typography variant="h4">Intro Puzzle #3</Typography>
-      <PuzzleWrapper details={PUZZLE_0C} highlightErrors />
       <br />
 
       <Typography variant="h4">Puzzles</Typography>

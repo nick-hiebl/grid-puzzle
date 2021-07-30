@@ -121,19 +121,25 @@ export const dayData: DayInfo[] = [
     description: 'More and more puzzles',
     link: '/days/17',
     component: Day17,
-    hidden: true,
   },
   {
     title: 'Day 18: Above and below',
     description: 'Over and under',
     link: '/days/18',
     component: Day18,
-    hidden: true,
   },
 ];
 
-if (window.location.host.includes('127')) {
+const revealAll =
+  localStorage?.getItem('unlock-all-days') === 'true';
+
+if (revealAll) {
   for (const day of dayData) {
     day.hidden = false;
   }
+} else {
+  console.log({
+    key: 'Enable all days',
+    method: "Run: localStorage.setItem('unlock-all-days', 'true') then refresh",
+  });
 }

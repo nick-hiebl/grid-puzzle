@@ -6,8 +6,6 @@ import { PuzzleWrapper } from '../../components/puzzle/PuzzleComponent';
 import type { DayProps } from './types';
 import { EdgeClue as Ec, GlobalFeature } from '../../api/puzzle/types';
 
-const both = [GlobalFeature.FLIP_HORIZONTAL, GlobalFeature.FLIP_VERTICAL];
-
 const PUZZLE_0 = {
   w: 5,
   h: 2,
@@ -18,12 +16,12 @@ const PUZZLE_0 = {
 const PUZZLE_1 = {
   n: 5,
   totalActive: 6,
-  globalFeatures: both,
+  globalFeatures: [GlobalFeature.FLIP_VERTICAL],
 };
 const PUZZLE_2 = {
   w: 5,
   h: 4,
-  globalFeatures: both,
+  globalFeatures: [GlobalFeature.FLIP_VERTICAL],
   totalActive: 6,
 };
 const PUZZLE_3 = {
