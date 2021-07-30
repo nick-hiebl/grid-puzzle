@@ -60,6 +60,7 @@ export type PuzzleDetails = Size & PuzzleDetailsInner;
 export enum GridFeatureKind {
   NEARBY_COUNT = 'NEARBY_COUNT',
   FORCED = 'FORCED',
+  STACKED_STEP = 'STACKED_STEP',
 }
 
 export interface GridFeature {

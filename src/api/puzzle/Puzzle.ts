@@ -247,15 +247,33 @@ export default class Puzzle {
   isStackedCorrectly(state: PuzzleState) {
     // Simple stacking
     if (this.globalFeatures.includes(GlobalFeature.STACKED)) {
-      for (const col of allColumns(state)) {
-        let isSolid = false;
+      const allColumnsValid = allColumns(state).every((col, i) => {
+        // Traverse the columns in bottom-to-top order
+        col.reverse();
+        let isSolid = true;
+        let j = this.h;
         for (const digit of col) {
-          if (isSolid && !digit) {
+          --j;
+
+          if (!isSolid && digit) {
+            const feature = this.getGridFeature(i, j);
+            // If we have a solid step then reset to non-empty state and continue
+            if (feature?.kind === GridFeatureKind.STACKED_STEP && feature.value === 1) {
+              isSolid = true;
+              continue;
+            }
+
             return false;
-          } else if (digit) {
-            isSolid = true;
+          } else if (!digit) {
+            isSolid = false;
           }
         }
+
+        return true;
+      });
+
+      if (!allColumnsValid) {
+        return false;
       }
     }
     // Over-under stacking
@@ -340,6 +358,15 @@ export default class Puzzle {
       }
     } else if (feature.kind === GridFeatureKind.FORCED) {
       if (state.enabled[i + this.w * j] !== !!feature.value) {
+        return false;
+      }
+    } else if (feature.kind === GridFeatureKind.STACKED_STEP) {
+      if (!state.enabled[i + this.w * j]) {
+        return false;
+      }
+      // Since value should be 1 or -1
+      const beneathIndex = i + this.w * (j + feature.value);
+      if (state.enabled[beneathIndex]) {
         return false;
       }
     }

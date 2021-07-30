@@ -162,8 +162,22 @@ const useGridFeatureDetails = (
         <img
           src={img}
           alt={feature.value ? 'Solid circle' : 'Empty circle'}
-          width="100px"
-          height="100px"
+          width="100%"
+          height="100%"
+          style={{
+            filter: !highlight ? TO_BLACK : GREEN_TO_RED,
+          }}
+        />
+      );
+    } else if (feature.kind === GridFeatureKind.STACKED_STEP) {
+      const img = image(`counts/stacked-step${feature.value < 0 ? '-u' : ''}.png`);
+
+      return (
+        <img
+          src={img}
+          alt={feature.value > 0 ? 'Bottom platform' : 'Top platform'}
+          width="100%"
+          height="100%"
           style={{
             filter: !highlight ? TO_BLACK : GREEN_TO_RED,
           }}

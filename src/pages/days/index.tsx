@@ -16,6 +16,7 @@ import Day15 from './day15';
 import Day16 from './day16';
 import Day17 from './day17';
 import Day18 from './day18';
+import Day19 from './day19';
 
 import type { DayInfo } from './types';
 
@@ -127,6 +128,13 @@ export const dayData: DayInfo[] = [
     description: 'Over and under',
     link: '/days/18',
     component: Day18,
+  },
+  {
+    title: 'Day 19: A starting step to build on',
+    description: '_',
+    link: '/days/19',
+    component: Day19,
+    hidden: true,
   },
 ];
 

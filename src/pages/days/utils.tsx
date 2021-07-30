@@ -23,7 +23,7 @@ export function near(i: number, j: number, count: number): GridFeature {
     i,
     j,
     value: count,
-  }
+  };
 }
 
 export function forced(i: number, j: number, on: boolean): GridFeature {
@@ -32,5 +32,14 @@ export function forced(i: number, j: number, on: boolean): GridFeature {
     i,
     j,
     value: +on,
-  }
+  };
+}
+
+export function step(i: number, j: number, up = true): GridFeature {
+  return {
+    kind: GridFeatureKind.STACKED_STEP,
+    i,
+    j,
+    value: up ? 1 : -1,
+  };
 }
