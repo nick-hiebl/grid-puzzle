@@ -320,6 +320,10 @@ function allRuleDetails(): Record<EdgeClue, { image: string; alt: string }> {
       image: image('counts/flip-vertical.png'),
       alt: 'Reflective',
     },
+    [EdgeClue.ANTISYMMETRIC]: {
+      image: image('counts/flip-antisymmetry.png'),
+      alt: 'Antisymmetric',
+    },
     [EdgeClue.DIV_A_YES]: {
       image: image('counts/16-a.png'),
       alt: 'Two triangles',

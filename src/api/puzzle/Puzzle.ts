@@ -73,6 +73,10 @@ function isLineSymmetric(line: boolean[]) {
   return line.every((value, index) => value === line[line.length - index - 1]);
 }
 
+function isLineAntiSymmetric(line: boolean[]) {
+  return line.every((value, index) => value !== line[line.length - index - 1]);
+}
+
 function isSizeLeft(details: SizeLeft | SizeRight): details is SizeLeft {
   return 'n' in details;
 }
@@ -190,6 +194,8 @@ export default class Puzzle {
       if (countGaps(line) !== 3) return false;
     } else if (rule === EdgeClue.REFLECTIVE) {
       if (!isLineSymmetric(line)) return false;
+    } else if (rule === EdgeClue.ANTISYMMETRIC) {
+      if (!isLineAntiSymmetric(line)) return false;
     } else if (rule === EdgeClue.DIV_A_YES) {
       if (sum % 2) return false;
     } else if (rule === EdgeClue.DIV_A_NO) {
