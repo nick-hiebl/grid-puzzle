@@ -56,14 +56,14 @@ export function stackedWithBaseline(
 
     const { valid: aboveValid, base: aboveBase } = colCheck(
       above,
-      columnSteps.filter(f => f.j < baseline).map(f => ({ ...f, j: baseline - f.j })),
+      columnSteps.filter(f => f.j < baseline).map(f => ({ ...f, j: baseline - f.j - 1 })),
     );
 
     if (!aboveValid) return false;
 
     const { valid: belowValid, base: belowBase } = colCheck(
       below,
-      columnSteps.filter(f => f.j < baseline).map(f => ({ ...f, j: baseline - f.j })),
+      columnSteps.filter(f => f.j < baseline).map(f => ({ ...f, j: f.j - baseline })),
     );
 
     if (!belowValid) return false;
