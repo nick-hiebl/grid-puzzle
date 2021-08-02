@@ -19,8 +19,8 @@ function colCheck(column: boolean[], features: GridFeature[]): { valid: boolean;
 
   for (const [square, j] of enumerate(column)) {
     if (square && !isSolid) {
-      const feature = !!features.find(f => f.j === j);
-      if (feature) {
+      const feature = features.find(f => f.j === j);
+      if (!!feature && feature.value > 0) {
         isSolid = true;
         continue;
       }
@@ -63,7 +63,11 @@ export function stackedWithBaseline(
 
     const { valid: belowValid, base: belowBase } = colCheck(
       below,
-      columnSteps.filter(f => f.j < baseline).map(f => ({ ...f, j: f.j - baseline })),
+      columnSteps.filter(f => f.j >= baseline).map(f => ({
+        ...f,
+        j: f.j - baseline,
+        value: -f.value,
+      })),
     );
 
     if (!belowValid) return false;

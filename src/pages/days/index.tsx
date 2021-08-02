@@ -19,6 +19,7 @@ import Day18 from './day18';
 import Day19 from './day19';
 import Day20 from './day20';
 import Day21 from './day21';
+import Day22 from './day22';
 
 import type { DayInfo } from './types';
 
@@ -148,6 +149,12 @@ export const dayData: DayInfo[] = [
     description: 'Over AND under',
     link: '/days/21',
     component: Day21,
+  },
+  {
+    title: 'Day 22: Steps up and down',
+    description: 'Stairs go both ways',
+    link: '/days/22',
+    component: Day22,
   },
 ];
 
