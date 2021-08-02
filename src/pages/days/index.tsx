@@ -18,6 +18,7 @@ import Day17 from './day17';
 import Day18 from './day18';
 import Day19 from './day19';
 import Day20 from './day20';
+import Day21 from './day21';
 
 import type { DayInfo } from './types';
 
@@ -135,14 +136,18 @@ export const dayData: DayInfo[] = [
     description: '_',
     link: '/days/19',
     component: Day19,
-    hidden: true,
   },
   {
     title: 'Day 20: Not a normal mirror',
     description: 'A warped reflection',
     link: '/days/20',
     component: Day20,
-    hidden: true,
+  },
+  {
+    title: 'Day 21: Above AND below',
+    description: 'Over AND under',
+    link: '/days/21',
+    component: Day21,
   },
 ];
 

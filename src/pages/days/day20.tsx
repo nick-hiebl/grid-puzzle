@@ -8,9 +8,10 @@ import { EdgeClue as Ec } from '../../api/puzzle/types';
 import { DayLink } from './utils';
 
 const PUZZLE_0 = {
-  n: 4,
-  minTotal: 7,
+  w: 3,
+  h: 4,
   rowClues: [null,null,null,1,null],
+  colClues: [Ec.ANTISYMMETRIC,Ec.ANTISYMMETRIC,Ec.ANTISYMMETRIC],
 };
 const PUZZLE_1 = {
   n: 4,

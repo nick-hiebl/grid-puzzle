@@ -253,6 +253,22 @@ export default class Puzzle {
 
       if (!someBaselineValid) return false;
     }
+    // Double (both) stacking
+    else if (this.globalFeatures.includes(GlobalFeature.STACKED_BOTH)) {
+      const baselines = [];
+      for (let i = 0; i <= this.h; i++) {
+        baselines.push(i);
+      }
+      const features = Object.values(this.gridFeatures);
+      const someBaselineValid = baselines.some(baseline => stackedWithBaseline(
+        state,
+        features,
+        baseline,
+        true,
+      ));
+
+      if (!someBaselineValid) return false;
+    }
 
     return true;
   }

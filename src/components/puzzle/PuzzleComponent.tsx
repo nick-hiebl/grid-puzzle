@@ -290,6 +290,7 @@ const NONO_RULE_LIST = [
   EdgeClue.NONO_1_2_2,
   EdgeClue.NONO_2_1_2,
   EdgeClue.NONO_2_2_1,
+  EdgeClue.NONO_1_3_1,
   EdgeClue.NONO_1_4,
   EdgeClue.NONO_4_1,
 ];
@@ -568,8 +569,9 @@ const Stacked = () => {
 
   const simpleStack = puzzle.globalFeatures.includes(GlobalFeature.STACKED);
   const ouStack = puzzle.globalFeatures.includes(GlobalFeature.STACKED_OU);
+  const bothStack = puzzle.globalFeatures.includes(GlobalFeature.STACKED_BOTH);
 
-  if (!simpleStack && !ouStack) {
+  if (!simpleStack && !ouStack && !bothStack) {
     return null;
   }
 
@@ -577,10 +579,22 @@ const Stacked = () => {
 
   const shouldHighlight = highlightErrors && !valid;
 
+  const src = simpleStack
+    ? 'counts/stacked.png'
+    : ouStack
+      ? 'counts/stacked2.png'
+      : 'counts/stacked3.png';
+
+  const alt = simpleStack
+    ? 'Stacked'
+    : ouStack
+      ? 'Over under stack'
+      : 'Above and below stack';
+
   return (
     <Clue
-      image={image(simpleStack ? 'counts/stacked.png' : 'counts/stacked2.png')}
-      alt={simpleStack ? 'Stacked' : 'Over under stack'}
+      image={image(src)}
+      alt={alt}
       width="60px"
       filter={shouldHighlight ? GREEN_TO_RED : undefined}
     />
