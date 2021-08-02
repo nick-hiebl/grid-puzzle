@@ -73,10 +73,15 @@ const UNCHECKED_IMAGES = [
   'unchecked-3.png',
 ].map(image);
 
-for (const image of CHECKED_IMAGES.concat(UNCHECKED_IMAGES)) {
-  const preload = new Image();
-  preload.src = image;
+function preload(s: string) {
+  const img = new Image();
+  img.src = s;
 }
+
+for (const image of CHECKED_IMAGES.concat(UNCHECKED_IMAGES)) {
+  preload(image);
+}
+preload('check-locked.png');
 
 const randomImage = (checked: boolean) => {
   if (checked) {
@@ -189,7 +194,7 @@ const useGridFeatureDetails = (
   }
 };
 
-const Button = (props: ButtonProps) => {
+const StandardButton = (props: ButtonProps) => {
   const { i, j, status } = props;
   const [img, setImage] = useState(randomImage(status));
   const [enabled, setEnabled] = useState(false);
@@ -246,6 +251,74 @@ const Button = (props: ButtonProps) => {
     </button>
   );
 };
+
+const NewButton = (props: ButtonProps) => {
+  const { i, j, status } = props;
+  const [locked, setLocked] = useState(false);
+  const [onImg] = useState(randomImage(true));
+  const [offImg] = useState(randomImage(false));
+
+  const { attemptKey, isPlayground } = usePuzzle();
+
+  const [, { onToggle }] = usePuzzleState();
+
+  useEffect(() => {
+    if (attemptKey) {
+      setLocked(false);
+    }
+  }, [attemptKey, setLocked]);
+
+  const onClick = useCallback((event: React.MouseEvent) => {
+    if (isRightClick(event)) {
+      // Suppress context menu
+      event.preventDefault();
+
+      setLocked(current => !current);
+    } else {
+      if (status) {
+        onToggle(i, j, false);
+      } else {
+        onToggle(i, j, true);
+      }
+      setLocked(false);
+    }
+  }, [i, j, onToggle, status]);
+
+  const featureContent = useGridFeatureDetails(i, j, status);
+  const img = status
+    ? (locked ? image('check-locked.png') : onImg)
+    : (locked ? offImg : '');
+
+  return (
+    <button
+      onClick={onClick}
+      onContextMenu={onClick}
+      style={{
+        border: `2px solid ${isPlayground ? '#147eff' : 'black'}`,
+        backgroundImage: img ? `url(${img})` : '',
+        backgroundColor: 'white',
+        backgroundSize: 'cover',
+        padding: '0',
+      }}
+    >
+      {featureContent}
+    </button>
+  );
+};
+
+const newButtonEnabled = localStorage.getItem('new-button') === 'true';
+
+if (newButtonEnabled) {
+  console.log("You're enrolled in the new button experiment.");
+  console.log("You can run localStorage.removeItem('new-button') and refresh to unenrol");
+} else {
+  console.log("I'm experimenting with the button UI.");
+  console.log(
+    "You can run localStorage.setItem('new-button', 'true') and refresh to try the new UI",
+  );
+}
+
+const Button = newButtonEnabled ? NewButton : StandardButton;
 
 const containerStyle = (w: number, h: number, isPlayground?: boolean): CSSProperties => ({
   display: 'inline-grid',
