@@ -1,4 +1,5 @@
 import countContinents from './countContinents';
+import { stackedWithBaseline } from './stacking';
 import type {
   GridFeature,
   PuzzleDetails,
@@ -7,6 +8,8 @@ import type {
   SizeRight,
 } from './types';
 import { EdgeClue, GlobalFeature, GridFeatureKind } from './types';
+
+import { allColumns, allRows } from './utils';
 
 function clueToCount(value: number | EdgeClue | null): number {
   if (typeof(value) == 'number') {
@@ -89,29 +92,7 @@ function getWidthHeight(details: SizeLeft | SizeRight) {
   }
 }
 
-function allRows(state: PuzzleState) {
-  const rows = [];
-  for (let i = 0; i < state.h; i++) {
-    const line = state.enabled.slice(i * state.w, (i + 1) * state.w);
-    // Lines are read from the right-hand-side for some rules, so we must reverse
-    line.reverse();
 
-    rows.push(line);
-  }
-
-  return rows;
-}
-
-function allColumns(state: PuzzleState) {
-  const cols = [];
-  for (let i = 0; i < state.w; i++) {
-    const line = state.enabled.filter((_, subIndex) => subIndex % state.w === i);
-
-    cols.push(line);
-  }
-
-  return cols;
-}
 
 export default class Puzzle {
   readonly w: number;
@@ -253,72 +234,24 @@ export default class Puzzle {
   isStackedCorrectly(state: PuzzleState) {
     // Simple stacking
     if (this.globalFeatures.includes(GlobalFeature.STACKED)) {
-      const allColumnsValid = allColumns(state).every((col, i) => {
-        // Traverse the columns in bottom-to-top order
-        col.reverse();
-        let isSolid = true;
-        let j = this.h;
-        for (const digit of col) {
-          --j;
-
-          if (!isSolid && digit) {
-            const feature = this.getGridFeature(i, j);
-            // If we have a solid step then reset to non-empty state and continue
-            if (feature?.kind === GridFeatureKind.STACKED_STEP && feature.value === 1) {
-              isSolid = true;
-              continue;
-            }
-
-            return false;
-          } else if (!digit) {
-            isSolid = false;
-          }
-        }
-
-        return true;
-      });
-
-      if (!allColumnsValid) {
+      if (!stackedWithBaseline(state, Object.values(this.gridFeatures), this.h)) {
         return false;
       }
     }
     // Over-under stacking
     else if (this.globalFeatures.includes(GlobalFeature.STACKED_OU)) {
-      let middles: number[] = [];
-      for (const col of allColumns(state)) {
-        const start = col.indexOf(true);
-
-        if (start === -1) continue;
-
-        const post = col.slice(start).indexOf(false);
-        const end = post === -1 ? this.h : start + post;
-
-        // If multiple sections, then bail
-        if (col.slice(end).some(v => v)) return false;
-
-        if (!middles.length) {
-          middles = [start, end];
-          continue;
-        }
-        const hasStart = middles.includes(start),
-          hasEnd = middles.includes(end);
-
-        if (!hasStart && !hasEnd) {
-          // Our endpoints don't match
-          return false;
-        } else if (hasStart && hasEnd) {
-          // Not able to narrow down which is correct
-          continue;
-        } else if (hasStart) {
-          middles = [start];
-          continue;
-        } else if (hasEnd) {
-          middles = [end];
-          continue;
-        }
+      const baselines = [];
+      for (let i = 0; i <= this.h; i++) {
+        baselines.push(i);
       }
+      const features = Object.values(this.gridFeatures);
+      const someBaselineValid = baselines.some(baseline => stackedWithBaseline(
+        state,
+        features,
+        baseline,
+      ));
 
-      return true;
+      if (!someBaselineValid) return false;
     }
 
     return true;
