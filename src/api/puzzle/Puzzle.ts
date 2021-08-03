@@ -1,4 +1,5 @@
 import countContinents from './countContinents';
+import { checkShapes } from './shapes';
 import { stackedWithBaseline } from './stacking';
 import type {
   GridFeature,
@@ -109,6 +110,8 @@ export default class Puzzle {
   readonly numContinents: number;
   readonly gridFeatures: Record<string, GridFeature>;
 
+  private shapesValid: Record<number, boolean>;
+
   readonly globalFeatures: GlobalFeature[];
 
   constructor(details: PuzzleDetails) {
@@ -147,10 +150,15 @@ export default class Puzzle {
     this.numContinents = details.numContinents ?? -1;
 
     this.gridFeatures = {};
+    this.shapesValid = {};
     for (const feature of details.gridFeatures || []) {
       const index = feature.i + feature.j * w;
 
       this.gridFeatures[index] = feature;
+
+      if (feature.kind.startsWith('shape')) {
+        this.shapesValid[index] = false;
+      }
     }
 
     this.globalFeatures = details.globalFeatures ?? [];
@@ -324,6 +332,8 @@ export default class Puzzle {
       if (state.enabled[beneathIndex]) {
         return false;
       }
+    } else if (feature.kind.startsWith('shape')) {
+      return this.shapesValid[i + j * this.w];
     }
 
     return true;
@@ -359,7 +369,28 @@ export default class Puzzle {
     }
   }
 
+  computeShapesValid(state: PuzzleState): boolean {
+    const shapes = Object.values(this.gridFeatures)
+      .filter(s => s.kind.startsWith('shape'));
+
+    if (!shapes.length) {
+      return true;
+    }
+
+    const complete = checkShapes(state, shapes);
+
+    this.shapesValid = {};
+    shapes.forEach((shape, index) => {
+      const pos = shape.i + shape.j * this.w;
+      this.shapesValid[pos] = complete[index];
+    });
+
+    return complete.every(x => x);
+  }
+
   isValid(state: PuzzleState): boolean {
+    const shapesValid = this.computeShapesValid(state);
+
     if (!this.isCountValid(state)) return false;
 
     const someRowWrong = allRows(state).some((row, i) => {
@@ -397,6 +428,10 @@ export default class Puzzle {
     }
 
     if (!this.isStackedCorrectly(state)) {
+      return false;
+    }
+
+    if (!shapesValid) {
       return false;
     }
 

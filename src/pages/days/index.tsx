@@ -20,6 +20,7 @@ import Day19 from './day19';
 import Day20 from './day20';
 import Day21 from './day21';
 import Day22 from './day22';
+import Day23 from './day23';
 
 import type { DayInfo } from './types';
 
@@ -155,6 +156,13 @@ export const dayData: DayInfo[] = [
     description: 'Stairs go both ways',
     link: '/days/22',
     component: Day22,
+  },
+  {
+    title: 'Day 23: Shapes on the board',
+    description: 'This one has been on my mind for a while',
+    link: '/days/23',
+    component: Day23,
+    hidden: true,
   },
 ];
 

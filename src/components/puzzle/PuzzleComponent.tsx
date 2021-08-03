@@ -13,6 +13,7 @@ import { EdgeClue } from '../../api/puzzle';
 import { GlobalFeature, GridFeature, GridFeatureKind } from '../../api/puzzle/types';
 
 const TO_BLACK = 'brightness(0) saturate(100%)';
+const TO_WHITE = 'brightness(0%) saturate(100%) invert(100%)';
 const GREEN_TO_BLUE = 'brightness(0) saturate(100%) invert(41%) sepia(48%) saturate(4528%) hue-rotate(200deg) brightness(99%) contrast(105%)';
 const GREEN_TO_RED = 'brightness(0) saturate(100%) invert(11%) sepia(98%) saturate(7155%) hue-rotate(0deg) brightness(101%) contrast(109%)';
 
@@ -112,6 +113,28 @@ function isGridFeature(feature: GridFeature | PlaygroundFeatures): feature is Gr
   return typeof(feature) !== 'string';
 }
 
+interface GFCProps {
+  image: string;
+  highlight?: boolean;
+  whiteOnSuccess?: boolean;
+}
+
+function GridFeatureComponent(props: GFCProps) {
+  const { highlight, image, whiteOnSuccess } = props;
+
+  return (
+    <div
+      style={{
+        filter: !highlight ? (whiteOnSuccess ? TO_WHITE : TO_BLACK) : GREEN_TO_RED,
+        backgroundImage: `url(${image})`,
+        width: '100%',
+        height: '100%',
+        backgroundSize: 'cover',
+      }}
+    />
+  );
+}
+
 const useGridFeatureDetails = (
   i: number,
   j: number,
@@ -164,28 +187,28 @@ const useGridFeatureDetails = (
       const img = image(feature.value ? 'counts/is-on.png' : 'counts/is-off.png');
 
       return (
-        <img
-          src={img}
-          alt={feature.value ? 'Solid circle' : 'Empty circle'}
-          width="100%"
-          height="100%"
-          style={{
-            filter: !highlight ? TO_BLACK : GREEN_TO_RED,
-          }}
+        <GridFeatureComponent
+          image={img}
+          highlight={highlight}
         />
       );
     } else if (feature.kind === GridFeatureKind.STACKED_STEP) {
       const img = image(`counts/stacked-step${feature.value < 0 ? '-u' : ''}.png`);
 
       return (
-        <img
-          src={img}
-          alt={feature.value > 0 ? 'Bottom platform' : 'Top platform'}
-          width="100%"
-          height="100%"
-          style={{
-            filter: !highlight ? TO_BLACK : GREEN_TO_RED,
-          }}
+        <GridFeatureComponent
+          image={img}
+          highlight={highlight}
+        />
+      );
+    } else if (feature.kind.startsWith('shape')) {
+      const img = image(`shapes/${feature.kind}.png`);
+
+      return (
+        <GridFeatureComponent
+          image={img}
+          highlight={highlight}
+          whiteOnSuccess
         />
       );
     }
@@ -758,7 +781,7 @@ const EdgeWrapper = (props: { children: React.ReactElement }) => {
 
   const pgBorderNeeded = usePlaygroundBorderNeeded();
   
-  if (!anyEdgeClues && !anyEdgeRules && !puzzle.totalRequirement() && !pgBorderNeeded) {
+  if (!anyEdgeClues && !anyEdgeRules && !puzzle.totalRequirement() && !pgBorderNeeded && !puzzle.globalFeatures.length) {
     return children;
   }
 

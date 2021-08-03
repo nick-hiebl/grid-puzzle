@@ -63,6 +63,9 @@ export enum GridFeatureKind {
   NEARBY_COUNT = 'NEARBY_COUNT',
   FORCED = 'FORCED',
   STACKED_STEP = 'STACKED_STEP',
+  SHAPE_SQUARE = 'shape-square',
+  SHAPE_J = 'shape-j',
+  SHAPE_L = 'shape-l',
 }
 
 export interface GridFeature {

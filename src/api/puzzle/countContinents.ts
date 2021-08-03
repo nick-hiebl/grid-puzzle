@@ -19,19 +19,26 @@ function flood(sequence: number[], w: number, h: number , i: number, colour: num
   }
 }
 
-export function countContinents(state: PuzzleState): number {
-  const sequence = state.enabled.map(v => +v);
+// Returns the number of continents
+export function colorContinents(sequence: number[], w: number, h: number): number {
   let k = 0;
-
   sequence.forEach((v, index) => {
     if (v === 1) {
       // Use k+2 to avoid conflicting with 1
-      flood(sequence, state.w, state.h, index, k + 2);
-      k += 1;
+      flood(sequence, w, h, index, k + 2);
+      k++;
     }
   });
 
   return k;
+}
+
+export function countContinents(state: PuzzleState): number {
+  const sequence = state.enabled.map(v => +v);
+
+  const numContinents = colorContinents(sequence, state.w, state.h);
+
+  return numContinents;
 }
 
 export default countContinents;
