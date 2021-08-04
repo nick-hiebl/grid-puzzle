@@ -43,3 +43,27 @@ export function step(i: number, j: number, up = true): GridFeature {
     value: up ? 1 : -1,
   };
 }
+
+export function L(i: number, j: number, ori = 0) {
+  return {
+    i, j,
+    kind: GridFeatureKind.SHAPE_L,
+    value: ori,
+  };
+}
+
+export function J(i: number, j: number, ori = 0) {
+  return {
+    i, j,
+    kind: GridFeatureKind.SHAPE_J,
+    value: ori,
+  };
+}
+
+export function SQ(i: number, j: number, ori = 0) {
+  return {
+    i, j,
+    kind: GridFeatureKind.SHAPE_SQUARE,
+    value: ori,
+  };
+}

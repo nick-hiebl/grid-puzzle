@@ -117,10 +117,11 @@ interface GFCProps {
   image: string;
   highlight?: boolean;
   whiteOnSuccess?: boolean;
+  rotation?: number;
 }
 
 function GridFeatureComponent(props: GFCProps) {
-  const { highlight, image, whiteOnSuccess } = props;
+  const { highlight, image, rotation, whiteOnSuccess } = props;
 
   return (
     <div
@@ -130,6 +131,8 @@ function GridFeatureComponent(props: GFCProps) {
         width: '100%',
         height: '100%',
         backgroundSize: 'cover',
+        transform: rotation ? `rotate(${rotation}deg)` : '',
+        borderRadius: rotation === undefined ? '' : '50%',
       }}
     />
   );
@@ -202,12 +205,14 @@ const useGridFeatureDetails = (
         />
       );
     } else if (feature.kind.startsWith('shape')) {
+      const rotation = feature.value === -1 ? 30 : 90 * feature.value;
       const img = image(`shapes/${feature.kind}.png`);
 
       return (
         <GridFeatureComponent
           image={img}
           highlight={highlight}
+          rotation={rotation}
           whiteOnSuccess
         />
       );

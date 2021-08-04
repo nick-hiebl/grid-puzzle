@@ -4,32 +4,8 @@ import { Container, Typography } from '@material-ui/core';
 import { PuzzleWrapper } from '../../components/puzzle/PuzzleComponent';
 
 import type { DayProps } from './types';
-import { EdgeClue as Ec, GlobalFeature, GridFeatureKind } from '../../api/puzzle/types';
-import { forced } from './utils';
-
-function L(i: number, j: number) {
-  return {
-    i, j,
-    kind: GridFeatureKind.SHAPE_L,
-    value: 0,
-  };
-}
-
-function J(i: number, j: number) {
-  return {
-    i, j,
-    kind: GridFeatureKind.SHAPE_J,
-    value: 0,
-  };
-}
-
-function SQ(i: number, j: number) {
-  return {
-    i, j,
-    kind: GridFeatureKind.SHAPE_SQUARE,
-    value: 0,
-  };
-}
+import { EdgeClue as Ec, GlobalFeature } from '../../api/puzzle/types';
+import { forced, L, J, SQ } from './utils';
 
 const PUZZLE_0A = {
   n: 5,

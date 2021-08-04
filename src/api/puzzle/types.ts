@@ -66,6 +66,8 @@ export enum GridFeatureKind {
   SHAPE_SQUARE = 'shape-square',
   SHAPE_J = 'shape-j',
   SHAPE_L = 'shape-l',
+  SHAPE_LONG = 'shape-long',
+  SHAPE_T = 'shape-t',
 }
 
 export interface GridFeature {
