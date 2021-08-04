@@ -162,7 +162,6 @@ export const dayData: DayInfo[] = [
     description: 'This one has been on my mind for a while',
     link: '/days/23',
     component: Day23,
-    hidden: true,
   },
 ];
 
