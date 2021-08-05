@@ -62,35 +62,18 @@ function image(path: string) {
   return `${process.env.PUBLIC_URL}/${path}`;
 }
 
-const CHECKED_IMAGES = [
-  'checked-1.png',
-  'checked-2.png',
-  'checked-3.png',
-].map(image);
-
-const UNCHECKED_IMAGES = [
-  'unchecked-1.png',
-  'unchecked-2.png',
-  'unchecked-3.png',
-].map(image);
-
 function preload(s: string) {
   const img = new Image();
   img.src = s;
 }
 
-for (const image of CHECKED_IMAGES.concat(UNCHECKED_IMAGES)) {
-  preload(image);
-}
-preload('check-locked.png');
+const CHECKED_IMG = image('checked.png');
+const UNCHECKED_IMG = image('unchecked.png');
+const LOCKED_IMG = image('check-locked.png');
 
-const randomImage = (checked: boolean) => {
-  if (checked) {
-    return CHECKED_IMAGES[Math.floor(Math.random() * CHECKED_IMAGES.length)];
-  }
-
-  return UNCHECKED_IMAGES[Math.floor(Math.random() * UNCHECKED_IMAGES.length)];
-}
+preload(CHECKED_IMG);
+preload(UNCHECKED_IMG);
+preload(LOCKED_IMG);
 
 function isRightClick(event: React.MouseEvent) {
   if ('type' in event) {
@@ -224,7 +207,6 @@ const useGridFeatureDetails = (
 
 const StandardButton = (props: ButtonProps) => {
   const { i, j, status } = props;
-  const [img, setImage] = useState(randomImage(status));
   const [enabled, setEnabled] = useState(false);
 
   const { attemptKey, isPlayground } = usePuzzle();
@@ -241,7 +223,6 @@ const StandardButton = (props: ButtonProps) => {
     if (isRightClick(event)) {
       // Suppress context menu
       event.preventDefault();
-      setImage(randomImage(false));
       if (status || !enabled) {
         onToggle(i, j, false);
         setEnabled(true);
@@ -250,11 +231,9 @@ const StandardButton = (props: ButtonProps) => {
       }
     } else {
       if (status) {
-        setImage(randomImage(false));
         onToggle(i, j, false);
         setEnabled(false);
       } else {
-        setImage(randomImage(true));
         onToggle(i, j, true);
         setEnabled(true);
       }
@@ -263,13 +242,21 @@ const StandardButton = (props: ButtonProps) => {
 
   const featureContent = useGridFeatureDetails(i, j, status);
 
+  const image = enabled
+    ? status
+      ? CHECKED_IMG
+      : UNCHECKED_IMG
+    : '';
+
+  console.log('Chose image', image);
+
   return (
     <button
       onClick={onClick}
       onContextMenu={onClick}
       style={{
         border: `2px solid ${isPlayground ? '#147eff' : 'black'}`,
-        backgroundImage: enabled ? `url(${img})` : '',
+        backgroundImage: image ? `url(${image})` : '',
         backgroundColor: 'white',
         backgroundSize: 'cover',
         padding: '0',
@@ -283,8 +270,6 @@ const StandardButton = (props: ButtonProps) => {
 const NewButton = (props: ButtonProps) => {
   const { i, j, status } = props;
   const [locked, setLocked] = useState(false);
-  const [onImg] = useState(randomImage(true));
-  const [offImg] = useState(randomImage(false));
 
   const { attemptKey, isPlayground } = usePuzzle();
 
@@ -314,8 +299,8 @@ const NewButton = (props: ButtonProps) => {
 
   const featureContent = useGridFeatureDetails(i, j, status);
   const img = status
-    ? (locked ? image('check-locked.png') : onImg)
-    : (locked ? offImg : '');
+    ? (locked ? LOCKED_IMG : CHECKED_IMG)
+    : (locked ? UNCHECKED_IMG : '');
 
   return (
     <button
