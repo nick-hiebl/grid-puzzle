@@ -33,6 +33,12 @@ const SHAPE_MAP: Partial<Record<GridFeatureKind, Shape[]>> = {
     [[f,t,f],[t,t,t]],
     [[t,f],[t,t],[t,f]],
   ],
+  [GridFeatureKind.SHAPE_R]: [
+    [[t,t],[t,f]],
+    [[t,t],[f,t]],
+    [[f,t],[t,t]],
+    [[t,f],[t,t]],
+  ],
 };
 
 function colorShapes(
@@ -155,6 +161,8 @@ export function checkShapes(state: PuzzleState, shapes: GridFeature[]): boolean[
   const colors = Object.keys(map).map(x => parseInt(x, 10));
   colors.sort();
 
+  let trueSafeColor = safeColor;
+
   for (const color of colors) {
     if (!map[color]) {
       continue;
@@ -166,8 +174,11 @@ export function checkShapes(state: PuzzleState, shapes: GridFeature[]): boolean[
       state.h,
       color,
       map[color],
-      safeColor + color,
+      trueSafeColor,
     );
+
+    // Add enough safe color space for each previous shape plus some leeway
+    trueSafeColor += map[color].length + 2;
 
     for (const shape of map[color]) {
       const idx = shapes.findIndex(s => s.i === shape.i && s.j === shape.j);

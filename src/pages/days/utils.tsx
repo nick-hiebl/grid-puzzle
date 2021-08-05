@@ -60,10 +60,34 @@ export function J(i: number, j: number, ori = 0) {
   };
 }
 
+export function R(i: number, j: number, ori = 0) {
+  return {
+    i, j,
+    kind: GridFeatureKind.SHAPE_R,
+    value: ori,
+  };
+}
+
 export function SQ(i: number, j: number, ori = 0) {
   return {
     i, j,
     kind: GridFeatureKind.SHAPE_SQUARE,
+    value: ori,
+  };
+}
+
+export function T(i: number, j: number, ori = 0) {
+  return {
+    i, j,
+    kind: GridFeatureKind.SHAPE_T,
+    value: ori,
+  };
+}
+
+export function LONG(i: number, j: number, ori = 0) {
+  return {
+    i, j,
+    kind: GridFeatureKind.SHAPE_LONG,
     value: ori,
   };
 }
