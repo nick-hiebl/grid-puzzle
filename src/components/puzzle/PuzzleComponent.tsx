@@ -687,6 +687,48 @@ const Stacked = () => {
   );
 };
 
+const SPECIAL_LINE_RULES = [
+  GlobalFeature.SOME_SOLID_ROW,
+  GlobalFeature.SOME_SOLID_COLUMN,
+  GlobalFeature.SOME_EMPTY_ROW,
+  GlobalFeature.SOME_EMPTY_COLUMN,
+  GlobalFeature.NO_SOLID_ROW,
+  GlobalFeature.NO_SOLID_COLUMN,
+  GlobalFeature.NO_EMPTY_ROW,
+  GlobalFeature.NO_EMPTY_COLUMN,
+];
+
+const SpecialLines = () => {
+  const { puzzle, highlightErrors } = usePuzzle();
+  const [state] = usePuzzleState();
+
+  const successful = puzzle.specialLinesValid(state);
+
+  return (
+    <>
+      {SPECIAL_LINE_RULES.map((rule, index) => {
+        if (!puzzle.globalFeatures.includes(rule)) {
+          return null;
+        }
+
+        const [key, type] = rule.split('/');
+
+        const img = image(`counts/${key}.png`);
+
+        return (
+          <Clue
+            image={img}
+            alt="Special line"
+            width="60px"
+            filter={highlightErrors && !successful[index] ? GREEN_TO_RED : undefined}
+            horizontal={type === 'column'}
+          />
+        );
+      })}
+    </>
+  );
+};
+
 const DetailsColumn = () => {
   const { puzzle, playgroundFeatures } = usePuzzle();
   const [state] = usePuzzleState();
@@ -721,6 +763,7 @@ const DetailsColumn = () => {
       <ContinentCount />
       <Symmetry />
       <Stacked />
+      <SpecialLines />
     </div>
   )
 };

@@ -22,6 +22,7 @@ import Day21 from './day21';
 import Day22 from './day22';
 import Day23 from './day23';
 import Day24 from './day24';
+import Day25 from './day25';
 
 import type { DayInfo } from './types';
 
@@ -169,6 +170,12 @@ export const dayData: DayInfo[] = [
     description: 'Rotating',
     link: '/days/24',
     component: Day24,
+  },
+  {
+    title: 'Day 25: Another symbol',
+    description: 'Another symbol',
+    link: '/days/25',
+    component: Day25,
   },
 ];
 

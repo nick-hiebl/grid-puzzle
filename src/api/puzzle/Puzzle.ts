@@ -388,6 +388,27 @@ export default class Puzzle {
     return complete.every(x => x);
   }
 
+  specialLinesValid(state: PuzzleState): boolean[] {
+    return [
+      !this.globalFeatures.includes(GlobalFeature.SOME_SOLID_ROW) ||
+        allRows(state).some(row => row.every(v => v === true)),
+      !this.globalFeatures.includes(GlobalFeature.SOME_SOLID_COLUMN) ||
+        allColumns(state).some(column => column.every(v => v === true)),
+      !this.globalFeatures.includes(GlobalFeature.SOME_EMPTY_ROW) ||
+        allRows(state).some(row => row.every(v => v === false)),
+      !this.globalFeatures.includes(GlobalFeature.SOME_EMPTY_COLUMN) ||
+        allColumns(state).some(column => column.every(v => v === false)),
+      !this.globalFeatures.includes(GlobalFeature.NO_SOLID_ROW) ||
+        allRows(state).every(row => !row.every(v => v === true)),
+      !this.globalFeatures.includes(GlobalFeature.NO_SOLID_COLUMN) ||
+        allColumns(state).every(column => !column.every(v => v === true)),
+      !this.globalFeatures.includes(GlobalFeature.NO_EMPTY_ROW) ||
+        allRows(state).every(row => !row.every(v => v === false)),
+      !this.globalFeatures.includes(GlobalFeature.NO_EMPTY_COLUMN) ||
+        allColumns(state).every(column => !column.every(v => v === false)),
+    ];
+  }
+
   isValid(state: PuzzleState): boolean {
     const shapesValid = this.computeShapesValid(state);
 
@@ -432,6 +453,10 @@ export default class Puzzle {
     }
 
     if (!shapesValid) {
+      return false;
+    }
+
+    if (!this.specialLinesValid(state).every(v => v)) {
       return false;
     }
 

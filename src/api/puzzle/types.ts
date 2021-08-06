@@ -84,4 +84,12 @@ export enum GlobalFeature {
   STACKED = 'stacked',
   STACKED_OU = 'stacked-ou', // Stacked over and under
   STACKED_BOTH = 'stacked-both',
+  SOME_SOLID_ROW = 'some-solid/row',
+  SOME_SOLID_COLUMN = 'some-solid/column',
+  SOME_EMPTY_ROW = 'some-empty/row',
+  SOME_EMPTY_COLUMN = 'some-empty/column',
+  NO_SOLID_ROW = 'no-solid/row',
+  NO_SOLID_COLUMN = 'no-solid/column',
+  NO_EMPTY_ROW = 'no-empty/row',
+  NO_EMPTY_COLUMN = 'no-empty/column',
 }
