@@ -23,6 +23,7 @@ import Day22 from './day22';
 import Day23 from './day23';
 import Day24 from './day24';
 import Day25 from './day25';
+import Day26 from './day26';
 
 import type { DayInfo } from './types';
 
@@ -176,6 +177,12 @@ export const dayData: DayInfo[] = [
     description: 'Another symbol',
     link: '/days/25',
     component: Day25,
+  },
+  {
+    title: 'Day 26: Not another symbol',
+    description: 'Not yesterday',
+    link: '/days/26',
+    component: Day26,
   },
 ];
 
