@@ -107,10 +107,12 @@ export default class Puzzle {
   readonly rowRules: (EdgeClue | null)[];
   private readonly minTotal: number | undefined;
   private readonly maxTotal: number | undefined;
+  readonly allowableErrors: number;
   readonly numContinents: number;
   readonly gridFeatures: Record<string, GridFeature>;
 
   private shapesValid: Record<number, boolean>;
+  private numErrors: number | undefined;
 
   readonly globalFeatures: GlobalFeature[];
 
@@ -162,6 +164,10 @@ export default class Puzzle {
     }
 
     this.globalFeatures = details.globalFeatures ?? [];
+
+    this.allowableErrors = details.allowableErrors ?? 0;
+
+    this.reset();
   }
 
   isLineValid(line: boolean[], rule: EdgeClue | null, count: number): boolean {
@@ -369,6 +375,17 @@ export default class Puzzle {
     }
   }
 
+  shapesValidList(state: PuzzleState): boolean[] {
+    const shapes = Object.values(this.gridFeatures)
+      .filter(s => s.kind.startsWith('shape'));
+
+    if (!shapes.length) {
+      return [];
+    }
+
+    return checkShapes(state, shapes);
+  }
+
   computeShapesValid(state: PuzzleState): boolean {
     const shapes = Object.values(this.gridFeatures)
       .filter(s => s.kind.startsWith('shape'));
@@ -411,6 +428,16 @@ export default class Puzzle {
 
   isValid(state: PuzzleState): boolean {
     const shapesValid = this.computeShapesValid(state);
+
+    if (this.allowableErrors > 0) {
+      const data = this.validLists(state);
+
+      const errs = this.countErrors(data);
+
+      this.numErrors = errs;
+
+      return errs === this.allowableErrors;
+    }
 
     if (!this.isCountValid(state)) return false;
 
@@ -463,6 +490,48 @@ export default class Puzzle {
     return true;
   }
 
+  validLists(state: PuzzleState): (() => (boolean | boolean[]))[] {
+    return [
+      () => this.shapesValidList(state),
+      () => this.isCountValid(state),
+      () => allRows(state).map((row, i) =>
+        this.isLineValid(row, this.rowRules[i], this.rowCounts[i]),
+      ),
+      () => allColumns(state).map((col, i) =>
+        this.isLineValid(col, this.colRules[i], this.colCounts[i]),
+      ),
+      () => this.numContinents === -1
+        || this.numContinents === countContinents(state),
+      () => Object.values(this.gridFeatures).map(feature =>
+        this.gridFeatureValid(feature.i, feature.j, state)
+      ),
+      () => this.isSymmetryCorrect(state),
+      () => this.isStackedCorrectly(state),
+      () => this.specialLinesValid(state),
+    ];
+  }
+
+  countErrors(data: (() => (boolean | boolean[]))[]): number {
+    let errors = 0;
+    for (const fn of data) {
+      const result: boolean | boolean[] = fn();
+
+      if (typeof result === 'boolean') {
+        if (!result) {
+          errors++;
+        }
+      } else {
+        for (const subResult of result) {
+          if (!subResult) {
+            errors++;
+          }
+        }
+      }
+    }
+
+    return errors;
+  }
+
   getState(): PuzzleState {
     return this.state;
   }
@@ -475,7 +544,7 @@ export default class Puzzle {
 
   toggle(i: number, j: number, status: boolean): PuzzleState {
     const index = i + j * this.w;
-    const newState = {
+    const newState: PuzzleState = {
       enabled: this.state.enabled.slice(),
       complete: false,
       w: this.w,
@@ -483,6 +552,7 @@ export default class Puzzle {
     };
     newState.enabled[index] = status;
     newState.complete = this.isValid(newState);
+    newState.numErrors = this.numErrors;
 
     this.state = newState;
 
@@ -490,13 +560,14 @@ export default class Puzzle {
   }
 
   reset(): PuzzleState {
-    const newState = {
+    const newState: PuzzleState = {
       enabled: Array(this.w * this.h).fill(false),
       complete: false,
       w: this.w,
       h: this.h,
     };
     newState.complete = this.isValid(newState);
+    newState.numErrors = this.numErrors;
 
     this.state = newState;
 

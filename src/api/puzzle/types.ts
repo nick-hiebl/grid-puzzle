@@ -3,6 +3,7 @@ export interface PuzzleState {
   h: number;
   complete: boolean;
   enabled: boolean[];
+  numErrors?: number;
 }
 
 export enum EdgeClue {
@@ -55,6 +56,7 @@ interface PuzzleDetailsInner {
   numContinents?: number;
   gridFeatures?: GridFeature[];
   globalFeatures?: GlobalFeature[];
+  allowableErrors?: number;
 }
 
 export type PuzzleDetails = Size & PuzzleDetailsInner;

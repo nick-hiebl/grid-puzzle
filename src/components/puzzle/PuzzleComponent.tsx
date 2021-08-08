@@ -248,8 +248,6 @@ const StandardButton = (props: ButtonProps) => {
       : UNCHECKED_IMG
     : '';
 
-  console.log('Chose image', image);
-
   return (
     <button
       onClick={onClick}
@@ -717,6 +715,7 @@ const SpecialLines = () => {
 
         return (
           <Clue
+            key={index}
             image={img}
             alt="Special line"
             width="60px"
@@ -727,6 +726,44 @@ const SpecialLines = () => {
       })}
     </>
   );
+};
+
+const ErrorCount = () => {
+  const { puzzle, highlightErrors } = usePuzzle();
+  const [state] = usePuzzleState();
+
+  if (!puzzle.allowableErrors) {
+    return null;
+  }
+
+  const count = state.numErrors as number;
+
+  if (typeof count !== 'number') {
+    return null;
+  }
+
+  const v = new Array(puzzle.allowableErrors).fill(0).map((_, i) => {
+    const shouldHighlight = highlightErrors && (
+      count > puzzle.allowableErrors ||
+      count <= i
+    );
+
+    return (
+      <Clue
+        key={i}
+        image={image('counts/error.png')}
+        alt="An error"
+        width="60px"
+        filter={shouldHighlight ? GREEN_TO_RED : undefined}
+      />
+    );
+  });
+
+  return (
+    <>
+      {v}
+    </>
+  )
 };
 
 const DetailsColumn = () => {
@@ -754,7 +791,7 @@ const DetailsColumn = () => {
     );
   }
 
-  if (!anyDetails && !puzzle.globalFeatures.length) {
+  if (!anyDetails && !puzzle.globalFeatures.length && !puzzle.allowableErrors) {
     return null;
   }
 
@@ -764,6 +801,7 @@ const DetailsColumn = () => {
       <Symmetry />
       <Stacked />
       <SpecialLines />
+      <ErrorCount />
     </div>
   )
 };
@@ -814,7 +852,7 @@ const EdgeWrapper = (props: { children: React.ReactElement }) => {
 
   const pgBorderNeeded = usePlaygroundBorderNeeded();
   
-  if (!anyEdgeClues && !anyEdgeRules && !puzzle.totalRequirement() && !pgBorderNeeded && !puzzle.globalFeatures.length) {
+  if (!anyEdgeClues && !anyEdgeRules && !puzzle.totalRequirement() && !pgBorderNeeded && !puzzle.globalFeatures.length && !puzzle.allowableErrors) {
     return children;
   }
 

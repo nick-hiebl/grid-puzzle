@@ -24,6 +24,7 @@ import Day23 from './day23';
 import Day24 from './day24';
 import Day25 from './day25';
 import Day26 from './day26';
+import Day27 from './day27';
 
 import type { DayInfo } from './types';
 
@@ -183,6 +184,12 @@ export const dayData: DayInfo[] = [
     description: 'Not yesterday',
     link: '/days/26',
     component: Day26,
+  },
+  {
+    title: "Day 27: Something's wrong",
+    description: "I'm pretty sure you can't get all of these correct",
+    link: '/days/27',
+    component: Day27,
   },
 ];
 
