@@ -52,6 +52,20 @@ const PUZZLE_5 = {
   colClues: [null,Ec.NONO_3_1,Ec.NONO_1_1_1,Ec.NONO_1_1,Ec.YES_TRIPLES],
   allowableErrors: 1,
 };
+const FINAL_PUZZLE_1 = {
+  n: 5,
+  rowClues: [Ec.YES_TRIPLES,Ec.NONO_1_2,2,2,Ec.SQ_2],
+  colClues: [0,4,3,1,3],
+  allowableErrors: 1,
+  gridFeatures: [forced(3,3,true)],
+};
+const FINAL_PUZZLE_2 = {
+  n: 5,
+  rowClues: [3,3,null,1,Ec.NONO_1_2],
+  colClues: [Ec.NONO_1_2,Ec.YES_TRIPLES,Ec.SQ_2,3,1],
+  allowableErrors: 1,
+  gridFeatures: [forced(2,2,false)],
+};
 
 const TodaysPage = (props: DayProps) => {
   return (
@@ -90,6 +104,14 @@ const TodaysPage = (props: DayProps) => {
 
       <Typography variant="h4">Puzzle #5</Typography>
       <PuzzleWrapper details={PUZZLE_5} highlightErrors />
+      <br />
+
+      <Typography variant="h4">Final puzzle #1</Typography>
+      <PuzzleWrapper details={FINAL_PUZZLE_1} highlightErrors />
+      <br />
+
+      <Typography variant="h4">Final puzzle #2</Typography>
+      <PuzzleWrapper details={FINAL_PUZZLE_2} highlightErrors />
       <br />
 
       {props.links}
