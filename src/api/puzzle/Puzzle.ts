@@ -59,6 +59,24 @@ function countGaps(seq: boolean[]) {
   return count;
 }
 
+function countSolids(seq: boolean[]) {
+  let count = 0;
+  let inGap = true;
+  for (const item of seq) {
+    if (item) {
+      if (inGap) {
+        // Entered new solid
+        count++;
+      }
+      inGap = false;
+    } else {
+      inGap = true;
+    }
+  }
+
+  return count;
+}
+
 function checkNonos(line: boolean[], clusters: number[]) {
   const foundClusters = line.map(x => +x) // Convert to numbers
     .join('') // Join into big string
@@ -187,6 +205,12 @@ export default class Puzzle {
       if (countGaps(line) !== 2) return false;
     } else if (rule === EdgeClue.SQ_3) {
       if (countGaps(line) !== 3) return false;
+    } else if (rule === EdgeClue.SB_1) {
+      if (countSolids(line) !== 1) return false;
+    } else if (rule === EdgeClue.SB_2) {
+      if (countSolids(line) !== 2) return false;
+    } else if (rule === EdgeClue.SB_3) {
+      if (countSolids(line) !== 3) return false;
     } else if (rule === EdgeClue.REFLECTIVE) {
       if (!isLineSymmetric(line)) return false;
     } else if (rule === EdgeClue.ANTISYMMETRIC) {

@@ -401,6 +401,18 @@ function allRuleDetails(): Record<EdgeClue, { image: string; alt: string }> {
       image: image('counts/square-3.png'),
       alt: 'Three squares',
     },
+    [EdgeClue.SB_1]: {
+      image: image('counts/sb-1.png'),
+      alt: 'One solid square',
+    },
+    [EdgeClue.SB_2]: {
+      image: image('counts/sb-2.png'),
+      alt: 'Two solid squares',
+    },
+    [EdgeClue.SB_3]: {
+      image: image('counts/sb-3.png'),
+      alt: 'Three solid squares',
+    },
     [EdgeClue.REFLECTIVE]: {
       image: image('counts/flip-vertical.png'),
       alt: 'Reflective',
