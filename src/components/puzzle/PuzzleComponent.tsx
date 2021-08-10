@@ -10,7 +10,7 @@ import React, {
 import Puzzle from '../../api/puzzle';
 import type { PuzzleDetails, PuzzleState } from '../../api/puzzle';
 import { EdgeClue } from '../../api/puzzle';
-import { GlobalFeature, GridFeature, GridFeatureKind } from '../../api/puzzle/types';
+import { GlobalFeature, GridFeature, GridFeatureKind, GroupFeatureDetails } from '../../api/puzzle/types';
 
 const TO_BLACK = 'brightness(0) saturate(100%)';
 const TO_WHITE = 'brightness(0%) saturate(100%) invert(100%)';
@@ -185,6 +185,15 @@ const useGridFeatureDetails = (
         <GridFeatureComponent
           image={img}
           highlight={highlight}
+        />
+      );
+    } else if (feature.kind === GridFeatureKind.GROUP) {
+      const shapeNames = ['triangle', 'diamond', 'square'];
+      const img = image(`counts/group-${shapeNames[feature.value]}.png`);
+
+      return (
+        <GridFeatureComponent
+          image={img}
         />
       );
     } else if (feature.kind.startsWith('shape')) {
@@ -778,6 +787,48 @@ const ErrorCount = () => {
   )
 };
 
+const SHAPES = ['▲', '◆', '■'];
+
+const GroupFeatures = () => {
+  const { puzzle, highlightErrors } = usePuzzle();
+  const [state] = usePuzzleState();
+
+  const hasGroupFeatures = useMemo(
+    () => !!puzzle.globalFeatures.find(f => typeof f !== 'string'),
+    [puzzle],
+  );
+
+  const groupFeatureDetails = useMemo<GroupFeatureDetails[]>(
+    () => hasGroupFeatures ? puzzle.groupFeatureDetails(state) : [],
+    [puzzle, state, hasGroupFeatures],
+  );
+
+  if (!hasGroupFeatures || !groupFeatureDetails.length) {
+    return null;
+  }
+
+  return (
+    <>
+      {groupFeatureDetails.map(detail => {
+        return (
+          <div style={{
+            gridArea: 'total-count',
+            textAlign: 'center',
+            justifyContent: 'center',
+          }}>
+            <strong style={{
+              fontSize: '2em',
+              color: highlightErrors && !detail.correct ? 'red' : 'inherit',
+            }}>
+              {SHAPES[detail.shape]}={detail.count}
+            </strong>
+          </div>
+        )
+      })}
+    </>
+  )
+}
+
 const DetailsColumn = () => {
   const { puzzle, playgroundFeatures } = usePuzzle();
   const [state] = usePuzzleState();
@@ -814,6 +865,7 @@ const DetailsColumn = () => {
       <Stacked />
       <SpecialLines />
       <ErrorCount />
+      <GroupFeatures />
     </div>
   )
 };

@@ -58,7 +58,7 @@ interface PuzzleDetailsInner {
   maxTotal?: number;
   numContinents?: number;
   gridFeatures?: GridFeature[];
-  globalFeatures?: GlobalFeature[];
+  globalFeatures?: (GlobalFeature | GroupFeature)[];
   allowableErrors?: number;
 }
 
@@ -68,6 +68,7 @@ export enum GridFeatureKind {
   NEARBY_COUNT = 'NEARBY_COUNT',
   FORCED = 'FORCED',
   STACKED_STEP = 'STACKED_STEP',
+  GROUP = 'GROUP',
   SHAPE_SQUARE = 'shape-square',
   SHAPE_J = 'shape-j',
   SHAPE_L = 'shape-l',
@@ -81,6 +82,17 @@ export interface GridFeature {
   i: number;
   j: number;
   value: number;
+}
+
+export interface GroupFeature {
+  shape: number; // 0 = triangle, 1 = diamond, 2 = square. Corresponds to value on GridFeature
+  count: number; // Number that should be true.
+}
+
+export interface GroupFeatureDetails {
+  shape: number;
+  count: number;
+  correct: boolean;
 }
 
 export enum GlobalFeature {

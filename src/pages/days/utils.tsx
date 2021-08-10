@@ -91,3 +91,18 @@ export function LONG(i: number, j: number, ori = 0) {
     value: ori,
   };
 }
+
+export function groupSpec(shape: number, count: number) {
+  return {
+    shape,
+    count,
+  };
+}
+
+export function group(i: number, j: number, shape: number) {
+  return {
+    i, j,
+    kind: GridFeatureKind.GROUP,
+    value: shape,
+  };
+}

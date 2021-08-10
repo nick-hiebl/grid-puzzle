@@ -26,6 +26,7 @@ import Day25 from './day25';
 import Day26 from './day26';
 import Day27 from './day27';
 import Day28 from './day28';
+import Day29 from './day29';
 
 import type { DayInfo } from './types';
 
@@ -197,6 +198,12 @@ export const dayData: DayInfo[] = [
     description: 'Going back a long way',
     link: '/days/28',
     component: Day28,
+  },
+  {
+    title: 'Day 29: How many here?',
+    description: 'Shapes and numbers',
+    link: '/days/29',
+    component: Day29,
   },
 ];
 

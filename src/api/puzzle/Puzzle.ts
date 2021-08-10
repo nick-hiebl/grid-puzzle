@@ -3,6 +3,8 @@ import { checkShapes } from './shapes';
 import { stackedWithBaseline } from './stacking';
 import type {
   GridFeature,
+  GroupFeature,
+  GroupFeatureDetails,
   PuzzleDetails,
   PuzzleState,
   SizeLeft,
@@ -111,6 +113,9 @@ function getWidthHeight(details: SizeLeft | SizeRight) {
   }
 }
 
+function isGroup(feature: GroupFeature | GlobalFeature): feature is GroupFeature {
+  return typeof feature !== 'string';
+}
 
 
 export default class Puzzle {
@@ -132,7 +137,7 @@ export default class Puzzle {
   private shapesValid: Record<number, boolean>;
   private numErrors: number | undefined;
 
-  readonly globalFeatures: GlobalFeature[];
+  readonly globalFeatures: (GlobalFeature | GroupFeature)[];
 
   constructor(details: PuzzleDetails) {
     const { w, h } = getWidthHeight(details);
@@ -450,6 +455,23 @@ export default class Puzzle {
     ];
   }
 
+  groupFeatureDetails(state: PuzzleState): GroupFeatureDetails[] {
+    const groups = this.globalFeatures.filter(isGroup);
+    return groups.map(group => {
+      const matching = Object.values(this.gridFeatures)
+        .filter(f => f.kind === GridFeatureKind.GROUP && f.value === group.shape);
+
+      const count = matching.map(f => +state.enabled[f.i + this.w * f.j])
+        .reduce((a, b) => a + b, 0);
+
+      return {
+        shape: group.shape,
+        count: group.count,
+        correct: count === group.count,
+      };
+    });
+  }
+
   isValid(state: PuzzleState): boolean {
     const shapesValid = this.computeShapesValid(state);
 
@@ -511,6 +533,10 @@ export default class Puzzle {
       return false;
     }
 
+    if (!this.groupFeatureDetails(state).every(detail => detail.correct)) {
+      return false;
+    }
+
     return true;
   }
 
@@ -532,6 +558,7 @@ export default class Puzzle {
       () => this.isSymmetryCorrect(state),
       () => this.isStackedCorrectly(state),
       () => this.specialLinesValid(state),
+      () => this.groupFeatureDetails(state).map(detail => detail.correct),
     ];
   }
 
