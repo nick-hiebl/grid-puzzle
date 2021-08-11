@@ -16,9 +16,11 @@ export enum EdgeClue {
   SQ_1 = '1_SQUARE',
   SQ_2 = '2_SQUARE',
   SQ_3 = '3_SQUARE',
+  SQ_4 = '4_SQUARE',
   SB_1 = 'SB_1',
   SB_2 = 'SB_2',
   SB_3 = 'SB_3',
+  SB_4 = 'SB_4',
   NONO_1_1 = 'nonos/1-1',
   NONO_1_1_1 = 'nonos/1-1-1',
   NONO_1_2 = 'nonos/1-2',
@@ -35,6 +37,7 @@ export enum EdgeClue {
   NONO_2_1_2 = 'nonos/2-1-2',
   NONO_2_2_1 = 'nonos/2-2-1',
   NONO_1_3_1 = 'nonos/1-3-1',
+  NONO_2_3_2 = 'nonos/2-3-2',
   NONO_1_4 = 'nonos/1-4',
   NONO_4_1 = 'nonos/4-1',
 }
@@ -98,6 +101,7 @@ export interface GroupFeatureDetails {
 export enum GlobalFeature {
   FLIP_HORIZONTAL = 'flipHorizontal',
   FLIP_VERTICAL = 'flipVertical',
+  // Also consider diagonal symmetry? TL-BR or TR-BL
   STACKED = 'stacked',
   STACKED_OU = 'stacked-ou', // Stacked over and under
   STACKED_BOTH = 'stacked-both',

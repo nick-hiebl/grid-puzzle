@@ -384,6 +384,7 @@ const NONO_RULE_LIST = [
   EdgeClue.NONO_2_1_2,
   EdgeClue.NONO_2_2_1,
   EdgeClue.NONO_1_3_1,
+  EdgeClue.NONO_2_3_2,
   EdgeClue.NONO_1_4,
   EdgeClue.NONO_4_1,
 ];
@@ -410,6 +411,10 @@ function allRuleDetails(): Record<EdgeClue, { image: string; alt: string }> {
       image: image('counts/square-3.png'),
       alt: 'Three squares',
     },
+    [EdgeClue.SQ_4]: {
+      image: image('counts/square-4.png'),
+      alt: 'Four squares',
+    },
     [EdgeClue.SB_1]: {
       image: image('counts/sb-1.png'),
       alt: 'One solid square',
@@ -421,6 +426,10 @@ function allRuleDetails(): Record<EdgeClue, { image: string; alt: string }> {
     [EdgeClue.SB_3]: {
       image: image('counts/sb-3.png'),
       alt: 'Three solid squares',
+    },
+    [EdgeClue.SB_4]: {
+      image: image('counts/sb-4.png'),
+      alt: 'Four solid squares',
     },
     [EdgeClue.REFLECTIVE]: {
       image: image('counts/flip-vertical.png'),

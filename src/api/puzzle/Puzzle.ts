@@ -210,12 +210,16 @@ export default class Puzzle {
       if (countGaps(line) !== 2) return false;
     } else if (rule === EdgeClue.SQ_3) {
       if (countGaps(line) !== 3) return false;
+    } else if (rule === EdgeClue.SQ_4) {
+      if (countGaps(line) !== 4) return false;
     } else if (rule === EdgeClue.SB_1) {
       if (countSolids(line) !== 1) return false;
     } else if (rule === EdgeClue.SB_2) {
       if (countSolids(line) !== 2) return false;
     } else if (rule === EdgeClue.SB_3) {
       if (countSolids(line) !== 3) return false;
+    } else if (rule === EdgeClue.SB_4) {
+      if (countSolids(line) !== 4) return false;
     } else if (rule === EdgeClue.REFLECTIVE) {
       if (!isLineSymmetric(line)) return false;
     } else if (rule === EdgeClue.ANTISYMMETRIC) {
