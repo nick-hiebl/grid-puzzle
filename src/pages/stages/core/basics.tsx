@@ -32,17 +32,17 @@ const Puzzles = (props: PageProps) => (
       them as inactive, perhaps as a mental note that you've ruled out a square.
     </p>
 
-    <PuzzleWrapper details={PUZZLE_0} />
-    <PuzzleWrapper details={PUZZLE_1} />
-    <PuzzleWrapper details={PUZZLE_2} />
-    <PuzzleWrapper details={PUZZLE_3} />
-    <PuzzleWrapper details={PUZZLE_4} />
-    <PuzzleWrapper details={PUZZLE_5} />
-    <PuzzleWrapper details={PUZZLE_6} />
-    <PuzzleWrapper details={PUZZLE_7} />
-    <PuzzleWrapper details={PUZZLE_8} />
-    <PuzzleWrapper details={PUZZLE_9} />
-    <PuzzleWrapper details={PUZZLE_10} />
+    <PuzzleWrapper details={PUZZLE_0} highlightErrors />
+    <PuzzleWrapper details={PUZZLE_1} highlightErrors />
+    <PuzzleWrapper details={PUZZLE_2} highlightErrors />
+    <PuzzleWrapper details={PUZZLE_3} highlightErrors />
+    <PuzzleWrapper details={PUZZLE_4} highlightErrors />
+    <PuzzleWrapper details={PUZZLE_5} highlightErrors />
+    <PuzzleWrapper details={PUZZLE_6} highlightErrors />
+    <PuzzleWrapper details={PUZZLE_7} highlightErrors />
+    <PuzzleWrapper details={PUZZLE_8} highlightErrors />
+    <PuzzleWrapper details={PUZZLE_9} highlightErrors />
+    <PuzzleWrapper details={PUZZLE_10} highlightErrors />
   </Container>
 );
 
