@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Container, Typography } from '@material-ui/core';
-import { PageInfo, PageProps } from '../../types';
+import { PageInfo } from '../../types';
 import { PuzzleWrapper } from '../../../components/puzzle/PuzzleComponent';
 
 const PUZZLE_0 = { n: 2, colClues: [2,-1], rowClues: [1,1] };
@@ -17,7 +17,7 @@ const PUZZLE_8 = { n: 5, colClues: [-1,1,3,4,2], rowClues: [1,0,-1,4,2] };
 const PUZZLE_9 = { n: 5, colClues: [1,-1,0,4,5], rowClues: [2,1,-1,2,2] };
 const PUZZLE_10 = { n: 5, colClues: [2,3,0,-1,4], rowClues: [4,1,-1,4,3] };
 
-const Puzzles = (props: PageProps) => (
+const Puzzles = () => (
   <Container>
     <Typography variant="h3">
       Puzzles 03

@@ -883,7 +883,7 @@ const ActiveCount = () => {
   const { puzzle, highlightErrors } = usePuzzle();
   const [state] = usePuzzleState();
 
-  const totalRequirement = puzzle.totalRequirement();
+  const totalRequirement = puzzle.totalRequirement(state, !!highlightErrors);
 
   if (!totalRequirement) {
     return null;
@@ -892,15 +892,33 @@ const ActiveCount = () => {
   const shouldHighlight = highlightErrors
     && !puzzle.isCountValid(state);
 
+  const { req, cur, conn } = totalRequirement;
+
+  if (!conn) {
+    return (
+      <div style={{
+        gridArea: 'total-count',
+        textAlign: 'center',
+        justifyContent: 'center',
+      }}>
+        <strong style={{ fontSize: '2em', color: shouldHighlight ? 'red' : 'inherit' }}>
+          {req}
+        </strong>
+      </div>
+    );
+  }
+
   return (
     <div style={{
       gridArea: 'total-count',
       textAlign: 'center',
       justifyContent: 'center',
     }}>
-      <strong style={{ fontSize: '2em', color: shouldHighlight ? 'red' : 'inherit' }}>
-        {totalRequirement}
-      </strong>
+      <span style={{ fontSize: '2em', fontWeight: 'bold' }}>
+        <span style={{ color: shouldHighlight ? 'red' : 'inherit' }}>
+          {cur}
+        </span> <span>{conn} {req}</span>
+      </span>
     </div>
   );
 }
@@ -925,7 +943,7 @@ const EdgeWrapper = (props: { children: React.ReactElement }) => {
 
   const pgBorderNeeded = usePlaygroundBorderNeeded();
   
-  if (!anyEdgeClues && !anyEdgeRules && !puzzle.totalRequirement() && !pgBorderNeeded && !puzzle.globalFeatures.length && !puzzle.allowableErrors) {
+  if (!anyEdgeClues && !anyEdgeRules && !puzzle.hasTotalRequirement() && !pgBorderNeeded && !puzzle.globalFeatures.length && !puzzle.allowableErrors) {
     return children;
   }
 

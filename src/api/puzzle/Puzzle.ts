@@ -394,7 +394,11 @@ export default class Puzzle {
     return true;
   }
 
-  totalRequirement(): string | undefined {
+  hasTotalRequirement(): boolean {
+    return !!(this.minTotal || this.maxTotal);
+  }
+
+  requirement(): string {
     if (this.minTotal && this.maxTotal) {
       if (this.minTotal === this.maxTotal) {
         return this.minTotal.toString();
@@ -406,6 +410,30 @@ export default class Puzzle {
     } else if (this.maxTotal) {
       return `≤${this.maxTotal}`;
     }
+
+    return '';
+  }
+
+  totalRequirement(state: PuzzleState, highlightErrors: boolean): { req: string, cur?: string, conn?: string } | undefined {
+    if (!this.hasTotalRequirement()) {
+      return undefined;
+    }
+
+    if (highlightErrors) {
+      const count = state.enabled.reduce((a, b) => a + (+b), 0);
+
+      const conn = this.minTotal === this.maxTotal ? '/' : 'vs.';
+
+      return {
+        req: this.requirement(),
+        cur: count.toString(),
+        conn,
+      };
+    }
+
+    return {
+      req: this.requirement(),
+    };
   }
 
   shapesValidList(state: PuzzleState): boolean[] {

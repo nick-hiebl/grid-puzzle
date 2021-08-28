@@ -4,23 +4,23 @@ import { Container, Typography } from '@material-ui/core';
 import { PageInfo } from '../../types';
 import { PuzzleWrapper } from '../../../components/puzzle/PuzzleComponent';
 
-const PUZZLE_0 = { n: 2, colClues: [2,0], rowClues: [1,1] };
+const PUZZLE_0 = { n: 2, colClues: [2,-1], rowClues: [2,-1], totalActive: 4 };
 
-const PUZZLE_1 = { n: 3, colClues: [2,0,2], rowClues: [2,0,2] };
-const PUZZLE_2 = { n: 3, colClues: [2,1,1], rowClues: [3,1,0] };
-const PUZZLE_3 = { n: 3, colClues: [0,1,1], rowClues: [1,0,1] };
-const PUZZLE_4 = { n: 4, colClues: [0,1,1,2], rowClues: [2,0,0,2] };
-const PUZZLE_5 = { n: 4, colClues: [2,4,0,2], rowClues: [3,1,3,1] };
-const PUZZLE_6 = { n: 4, colClues: [2,2,3,1], rowClues: [1,4,3,0] };
-const PUZZLE_7 = { n: 5, colClues: [5,2,0,3,5], rowClues: [3,2,4,2,4] };
-const PUZZLE_8 = { n: 5, colClues: [5,0,1,1,3], rowClues: [3,3,2,1,1] };
-const PUZZLE_9 = { n: 5, colClues: [3,1,0,3,3], rowClues: [3,4,0,1,2] };
-const PUZZLE_10 = { n: 5, colClues: [5,0,2,3,2], rowClues: [3,4,3,1,1] };
+const PUZZLE_1 = { n: 3, colClues: [1,-1,1], rowClues: [1,-1,1], totalActive: 5 };
+const PUZZLE_2 = { n: 3, colClues: [-1,1,3], rowClues: [2,2,-1], totalActive: 7 };
+const PUZZLE_3 = { n: 3, colClues: [3,-1,2], rowClues: [1,-1,3], totalActive: 6 };
+const PUZZLE_4 = { n: 4, colClues: [1,2,2,-1], rowClues: [-1,1,1,3], totalActive: 9 };
+const PUZZLE_5 = { n: 4, colClues: [-1,2,4,1], rowClues: [-1,2,1,4], totalActive: 8 };
+const PUZZLE_6 = { n: 4, colClues: [-1,2,4,1], rowClues: [-1,2,1,4], totalActive: 10 };
+const PUZZLE_7 = { n: 5, colClues: [1,2,-1,4,4], rowClues: [4,-1,2,3,2], totalActive: 11 };
+const PUZZLE_8 = { n: 5, colClues: [1,2,-1,4,4], rowClues: [4,-1,2,3,2], totalActive: 16 };
+const PUZZLE_9 = { n: 5, colClues: [1,2,3,2,-1], rowClues: [0,4,-1,2,1], totalActive: 12 };
+const PUZZLE_10 = { n: 5, colClues: [1,3,4,-1,4], rowClues: [4,3,1,-1,5], totalActive: 14 };
 
 const Puzzles = () => (
   <Container>
     <Typography variant="h3">
-      Puzzles 02
+      Puzzles 03
     </Typography>
 
     <PuzzleWrapper details={PUZZLE_0} highlightErrors />
@@ -40,6 +40,6 @@ const Puzzles = () => (
 export const Page: PageInfo = {
   title: '',
   description: '',
-  link: '/stages/812085688',
+  link: '/stages/456765432',
   component: Puzzles,
 };
