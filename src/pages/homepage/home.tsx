@@ -10,8 +10,11 @@ const HomePage = () => {
       <Typography variant="h3">Grid puzzles website</Typography>
       <p>Hopefully the home of some interesting puzzles.</p>
       <ul>
-        <li>
+        {/* <li>
           <Link to="/days">View all days of puzzles</Link>
+        </li> */}
+        <li>
+          <Link to="/stages/375262364">Core mechanic intro</Link>
         </li>
         <li>
           <Link to="/devlogs">View all devlogs</Link>

@@ -13,6 +13,7 @@ import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import { AllDays, AllDevlogs, HomePage } from './pages/homepage';
 import { dayData } from './pages/days';
 import { Loglist } from './pages/devlog';
+import { StageList } from './pages/stages';
 
 const ScrollToTop = withRouter(({ history }) => {
   useEffect(() => {
@@ -51,8 +52,8 @@ function App() {
             </Typography>
           </Link>
           <NavItem to="/">Home</NavItem>
-          <NavItem to={dayData[0].link}>Day 1</NavItem>
-          <NavItem to={shownDays[shownDays.length - 1].link}>Today</NavItem>
+          {/* <NavItem to={dayData[0].link}>Day 1</NavItem>
+          <NavItem to={shownDays[shownDays.length - 1].link}>Today</NavItem> */}
           <NavItem to="/devlogs">Devlogs</NavItem>
         </Toolbar>
       </AppBar>
@@ -99,6 +100,11 @@ function App() {
                 )}
               </div>
             )} />
+          </Route>
+        ))}
+        {StageList.map(({ component: Component, link, title }, index) => (
+          <Route key={index} path={link}>
+            <Component links={<></>} />
           </Route>
         ))}
         <Route path="/days">
