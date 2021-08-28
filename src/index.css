@@ -7,11 +7,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
 .details-column > div {
   margin: 8px 0;
+}
+
+.MuiAppBar-colorDefault {
+  background-color: #0c90e2 !important;
 }

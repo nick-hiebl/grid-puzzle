@@ -10,8 +10,9 @@ import {
 
 import { AppBar, Toolbar, Typography } from '@material-ui/core';
 
-import HomePage from './pages/homepage';
+import { AllDays, AllDevlogs, HomePage } from './pages/homepage';
 import { dayData } from './pages/days';
+import { Loglist } from './pages/devlog';
 
 const ScrollToTop = withRouter(({ history }) => {
   useEffect(() => {
@@ -42,14 +43,17 @@ function App() {
   return (
     <Router>
       <ScrollToTop />
-      <AppBar position="sticky">
+      <AppBar position="sticky" color="default">
         <Toolbar>
-          <Typography variant="h5">
-            Grid Puzzle
-          </Typography>
+          <Link to="/" style={{ textDecoration: 'none' }}>
+            <Typography variant="h5" style={{ color: 'white' }}>
+              Grid Puzzle
+            </Typography>
+          </Link>
           <NavItem to="/">Home</NavItem>
           <NavItem to={dayData[0].link}>Day 1</NavItem>
           <NavItem to={shownDays[shownDays.length - 1].link}>Today</NavItem>
+          <NavItem to="/devlogs">Devlogs</NavItem>
         </Toolbar>
       </AppBar>
       <Switch>
@@ -75,6 +79,34 @@ function App() {
             )} />
           </Route>
         ))}
+        {Loglist.map(({ component: Component, link, title }, index) => (
+          <Route key={index} path={link}>
+            <Component links={(
+              <div style={{ paddingTop: '8px', marginBottom: '32px' }}>
+                {index > 0 && (
+                  <div style={{ float: 'left' }}>
+                    <Link to={Loglist[index - 1].link}>
+                    ← {Loglist[index - 1].title}
+                    </Link>
+                  </div>
+                )}
+                {index < (Loglist.length - 1) && (
+                  <div style={{ float: 'right' }}>
+                    <Link to={Loglist[index + 1].link}>
+                      {Loglist[index + 1].title} →
+                    </Link>
+                  </div>
+                )}
+              </div>
+            )} />
+          </Route>
+        ))}
+        <Route path="/days">
+          <AllDays />
+        </Route>
+        <Route path="/devlogs">
+          <AllDevlogs />
+        </Route>
         <Route path="/">
           <HomePage />
         </Route>
