@@ -20,22 +20,25 @@ const PUZZLE_10 = { n: 5, colClues: [4,2,4,3,1], rowClues: [1,5,4,3,1] };
 const Puzzles = (props: PageProps) => (
   <Container>
     <Typography variant="h3">
-      Introduction to the core mechanic
+      Puzzles 01
     </Typography>
 
     <p>
       Welcome to "grid puzzle game".
     </p>
 
-    <p>
-      Left click on squares to mark them as active. You can also right click on squares to mark
-      them as inactive, perhaps as a mental note that you've ruled out a square.
-    </p>
+    <p>Left click on squares to tiggke whether they are active.</p>
 
     <PuzzleWrapper details={PUZZLE_0} highlightErrors />
     <PuzzleWrapper details={PUZZLE_1} highlightErrors />
     <PuzzleWrapper details={PUZZLE_2} highlightErrors />
     <PuzzleWrapper details={PUZZLE_3} highlightErrors />
+
+    <p>
+      You can also optionally right click on an empty square to mark it as "confirmed" inactive,
+      perhaps as a note to self.
+    </p>
+
     <PuzzleWrapper details={PUZZLE_4} highlightErrors />
     <PuzzleWrapper details={PUZZLE_5} highlightErrors />
     <PuzzleWrapper details={PUZZLE_6} highlightErrors />
