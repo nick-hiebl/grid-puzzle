@@ -221,9 +221,4 @@ if (revealAll) {
   for (const day of dayData) {
     day.hidden = false;
   }
-} else {
-  console.log({
-    key: 'Enable all days',
-    method: "Run: localStorage.setItem('unlock-all-days', 'true') then refresh",
-  });
 }
