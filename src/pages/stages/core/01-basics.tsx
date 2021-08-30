@@ -50,7 +50,7 @@ const Puzzles = () => (
 );
 
 export const Page: PageInfo = {
-  title: '',
+  title: 'Puzzles 01',
   description: '',
   link: '/stages/375262364',
   component: Puzzles,

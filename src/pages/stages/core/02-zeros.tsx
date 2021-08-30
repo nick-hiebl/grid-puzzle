@@ -38,7 +38,7 @@ const Puzzles = () => (
 );
 
 export const Page: PageInfo = {
-  title: '',
+  title: 'Puzzles 02',
   description: '',
   link: '/stages/812085688',
   component: Puzzles,

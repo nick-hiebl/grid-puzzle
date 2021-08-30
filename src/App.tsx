@@ -14,6 +14,7 @@ import { AllDays, AllDevlogs, HomePage } from './pages/homepage';
 import { dayData } from './pages/days';
 import { Loglist } from './pages/devlog';
 import { StageList } from './pages/stages';
+import { Title } from './components/common';
 
 const ScrollToTop = withRouter(({ history }) => {
   useEffect(() => {
@@ -52,9 +53,8 @@ function App() {
             </Typography>
           </Link>
           <NavItem to="/">Home</NavItem>
-          {/* <NavItem to={dayData[0].link}>Day 1</NavItem>
-          <NavItem to={shownDays[shownDays.length - 1].link}>Today</NavItem> */}
-          <NavItem to="/devlogs">Devlogs</NavItem>
+          {/* <NavItem to="/devlogs">Devlogs</NavItem> */}
+          <NavItem to="/stages/375262364">Intro</NavItem>
         </Toolbar>
       </AppBar>
       <Switch>
@@ -78,6 +78,7 @@ function App() {
                 )}
               </div>
             )} />
+            <Title title={title} />
           </Route>
         ))}
         {Loglist.map(({ component: Component, link, title }, index) => (
@@ -100,21 +101,26 @@ function App() {
                 )}
               </div>
             )} />
+            <Title title={title} />
           </Route>
         ))}
         {StageList.map(({ component: Component, link, title }, index) => (
           <Route key={index} path={link}>
             <Component links={<></>} />
+            <Title title={title} />
           </Route>
         ))}
         <Route path="/days">
           <AllDays />
+          <Title title="Puzzles - All days" />
         </Route>
         <Route path="/devlogs">
           <AllDevlogs />
+          <Title title="Puzzles - All devlogs" />
         </Route>
         <Route path="/">
           <HomePage />
+          <Title title="Puzzles" />
         </Route>
       </Switch>
     </Router>

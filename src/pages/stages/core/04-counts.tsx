@@ -20,7 +20,7 @@ const PUZZLE_10 = { n: 5, colClues: [1,3,4,-1,4], rowClues: [4,3,1,-1,5], totalA
 const Puzzles = () => (
   <Container>
     <Typography variant="h3">
-      Puzzles 03
+      Puzzles 04
     </Typography>
 
     <PuzzleWrapper details={PUZZLE_0} highlightErrors />
@@ -38,7 +38,7 @@ const Puzzles = () => (
 );
 
 export const Page: PageInfo = {
-  title: '',
+  title: 'Puzzles 04',
   description: '',
   link: '/stages/456765432',
   component: Puzzles,

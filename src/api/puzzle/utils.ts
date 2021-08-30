@@ -1,4 +1,5 @@
 import type { PuzzleState } from './types';
+import { GridFeature, GridFeatureKind } from './types';
 
 export function allRows(state: PuzzleState) {
   const rows = [];
@@ -22,4 +23,22 @@ export function allColumns(state: PuzzleState) {
   }
 
   return cols;
+}
+
+export function forced(i: number, j: number, on: boolean): GridFeature {
+  return {
+    kind: GridFeatureKind.FORCED,
+    i,
+    j,
+    value: +on,
+  };
+}
+
+export function step(i: number, j: number, up = true): GridFeature {
+  return {
+    kind: GridFeatureKind.STACKED_STEP,
+    i,
+    j,
+    value: up ? 1 : -1,
+  };
 }
