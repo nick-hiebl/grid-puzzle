@@ -27,7 +27,7 @@ const Puzzles = () => (
       Welcome to "grid puzzle game".
     </p>
 
-    <p>Left click on squares to tiggke whether they are active.</p>
+    <p>Left click on squares to toggle whether they are active.</p>
 
     <PuzzleWrapper details={PUZZLE_0} highlightErrors />
     <PuzzleWrapper details={PUZZLE_1} highlightErrors />
