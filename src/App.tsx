@@ -14,6 +14,7 @@ import { AllDays, AllDevlogs, HomePage } from './pages/homepage';
 import { dayData } from './pages/days';
 import { Loglist } from './pages/devlog';
 import { StageList } from './pages/stages';
+import FathersDay from './pages/special/fathersday';
 import { Title } from './components/common';
 
 const ScrollToTop = withRouter(({ history }) => {
@@ -110,6 +111,9 @@ function App() {
             <Title title={title} />
           </Route>
         ))}
+        <Route path="/fathersday">
+          <FathersDay />
+        </Route>
         <Route path="/days">
           <AllDays />
           <Title title="Puzzles - All days" />
