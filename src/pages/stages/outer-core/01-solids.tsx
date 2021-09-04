@@ -23,7 +23,7 @@ const PUZZLE_10 = { w: 6, h: 5, colClues: [2,2,1,Ec.SB_2,4,3], rowClues: [2,2,Ec
 const Puzzles = () => (
   <Container>
     <Typography variant="h3">
-      Puzzles 01-01
+      Puzzles A01
     </Typography>
 
     <PuzzleWrapper details={PUZZLE_0A} highlightErrors />
@@ -44,7 +44,7 @@ const Puzzles = () => (
 );
 
 export const Page: PageInfo = {
-  title: 'Puzzles 01',
+  title: 'Puzzles A01',
   description: '',
   link: '/stages/1123581321',
   component: Puzzles,
