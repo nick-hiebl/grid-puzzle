@@ -3,6 +3,7 @@ import React from 'react';
 import { Container, Typography } from '@material-ui/core';
 import { PuzzleWrapper } from '../../components/puzzle/PuzzleComponent';
 import { EdgeClue as Ec, forced } from '../../api/puzzle';
+import { Title } from '../../components/common';
 
 const PUZZLE_1 = { w: 7, h: 5, colClues: [1,2,1,Ec.NONO_1_1,2,Ec.NONO_2_2,5], rowClues: [Ec.NONO_2_1_1,Ec.NONO_4_1,Ec.NONO_1_1_1,Ec.NONO_2_1,Ec.SB_1] };
 const PUZZLE_2 = { w: 7, h: 3, colClues: [1,0,1,1,1,3,3], rowClues: [Ec.NONO_2_1,Ec.NONO_2_1,Ec.NONO_3_1], gridFeatures: [forced(0,2,true),forced(3,1,false)] };
@@ -12,6 +13,7 @@ const PUZZLE_5 = { w: 7, h: 6, colClues: [1,0,1,Ec.NONO_1_2,Ec.NONO_3_1,Ec.NONO_
 
 const Puzzles = () => (
   <Container>
+    <Title title="Father's day" />
     <Typography variant="h3">
       Father's Day puzzles
     </Typography>
